@@ -6,6 +6,10 @@
 </head>
 <body>
 	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>
+	<form method="PUT" action="test">
+		<input type="text" name="name" value="PUT">
+		<input type="submit">
+	</form>
 	
 </body>
 </html>

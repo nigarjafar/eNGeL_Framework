@@ -5,6 +5,8 @@ class App{
 	protected $parameters=[];
 	protected $defaultController= "HomeController";
 	protected $defaultMethod="index";
+	protected $requestType;
+
 
 	public function __construct(){
 
@@ -25,12 +27,35 @@ class App{
 
 
 		//Checking for the method
-		if(isset($url[1])&&method_exists($this->defaultController, $url[1])){
-			$this->defaultMethod=$url[1];
-			unset($url[1]);
+		if(isset($url[1])){
+			
+			//Checking for the request method
+			$requestType=$_SERVER['REQUEST_METHOD'];
+			$method=$url[1];
+
+			var_dump($method);
+			var_dump($requestType);
+
+			switch($requestType){
+				case "GET": $method= "get_".$method;
+							break;
+				case "POST": $method= "post_".$method;
+							break;
+				case "PUT": $method= "put_".$method;
+							break;
+				case "DELETE": $method= "delete_".$method;
+							break;
+				
+			}
+
+			if(method_exists($this->defaultController, $method))
+				$this->defaultMethod=$method;
+				unset($url[1]);
+
 		}
 
-
+		var_dump($this->defaultMethod);
+		
 		//Getting parameters
 		$this->parameters = $url ? array_values($url) : [];
 
