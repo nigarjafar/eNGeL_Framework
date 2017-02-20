@@ -14,4 +14,7 @@ class UserController extends Controller{
 		return $this->View('home', ['name'=>$user->username]);
 
 	}
+	public function param( $id){
+		echo $id;
+	}
 }
