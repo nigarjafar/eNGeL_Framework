@@ -1,10 +1,10 @@
 <?php
 
-class HomeController{
+class HomeController extends Controller{
 
 	public function index(){
-		echo "Hello index home";
-		DB::Select('tags');
+		echo "Hello index home\n";
+
 	}
 
 }

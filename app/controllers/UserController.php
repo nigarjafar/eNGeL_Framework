@@ -7,12 +7,16 @@ class UserController extends Controller{
 	}
 
 	public function get_message(){
-
 		$user=$this->model('User');
 		$user->username="Nigar";
-
 		return $this->View('home', ['name'=>$user->username]);
 
+	}
+
+	public function get_profile($id){
+		$user=$this->model('User');
+		$user->setTable('users');
+		var_dump($user->getUserById($id));
 	}
 	public function get_param( $id){
 		echo $id;

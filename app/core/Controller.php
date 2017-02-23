@@ -8,7 +8,11 @@ class Controller{
 	}
 	
 	public function View($url, $data=[]){
-
 		require_once '../app/views/'.$url.'.php';
 	}
+
+	// public function DB($table){
+	// 	require_once '../app/database/db.php';
+	// 	return new db($table,new DBConnection());
+	// }
 }

@@ -2,9 +2,9 @@
 
 class DBConnection extends PDO{
 
-	var $username;
-	var $password;
-    var $dns;
+	private $username;
+	private $password;
+    private $dns;
     
     public function __construct($file = '../app/db.ini'){
 
@@ -33,6 +33,8 @@ class DBConnection extends PDO{
         $this->username=$settings['database']['username'];
         $this->password= $settings['database']['password'];
     }
+
+    
 
 
 }

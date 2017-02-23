@@ -2,19 +2,24 @@
 
 require_once('config.php');
 
+
+
 class DB {
-	var $db;
+	private $con;
 
-	// public function __construct(){
-	// 	$this->db=new DBConnection;
-	// }
+	public function __construct($con){
+		$this->con=$con;
+	}
 
-	// public static function Select($table){
-	// 	$sql = 'SELECT * FROM'.$table;
- //    	foreach ($this->db->query($sql) as $row) {
- //        	var_dump( $row);
- //    	}
-	// }
+	public function SelectByID($table,$id){
+    	$st = $this->con->prepare('SELECT * FROM '.$table.' WHERE id = :id');
+    	$st->bindParam(':id', $id);
+		$st->execute();
+		$results = $st->fetchAll(PDO::FETCH_ASSOC);
+		return $results;
+	}
+
+
 
 }
 
