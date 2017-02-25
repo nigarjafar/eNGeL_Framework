@@ -4,7 +4,7 @@ class User extends Model{
 	public $username;
 
 
-	public function getUserById($id){
+	public function getById($id){
 		return $this->db->SelectById($this->table,$id);
 	}
 }
