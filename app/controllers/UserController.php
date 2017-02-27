@@ -2,6 +2,8 @@
 
 class UserController extends Controller{
 
+
+
 	public function index(){
 		echo "Hello index user";
 	}
@@ -17,6 +19,23 @@ class UserController extends Controller{
 		$user=$this->model('User');
 		$user->setTable('users');
 		var_dump($user->getById($id));
+	}
+
+	public function get_all(){
+		$user=$this->model('User');
+		$user->setTable('users');
+		var_dump($user->all());
+	}
+
+	public function get_create(){
+		$user=$this->model('User');
+		$user->setTable('users');
+		var_dump($user->Create([
+			'name'=>'Engel',
+			'email'=>'workssccchujjksd'.rand(0,29299292),
+			'user_type'=>'company',
+			'password'=>'ahuhsujd'
+			]));
 	}
 	public function get_param( $id){
 		echo $id;

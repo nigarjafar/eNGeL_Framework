@@ -12,10 +12,17 @@ class Model{
 		$this->table=$table;
 	}
 
-	public function all(){
-		
+	public function getById($id,$rows='*'){
+		return $this->db->SetWhereStatement(['id'=>$id],'AND')->Select($this->table,$rows)->Query()->Get();
 	}
 
+	public function all($rows='*'){
+		return $this->db->Select($this->table,$rows)->Query()->Get();
+	}
+
+	public function create($data){
+		return $this->db->Create($this->table, $data)->Query()->GetLastInserted($this->table);
+	}
 
 
 }
