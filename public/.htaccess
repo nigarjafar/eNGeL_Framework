@@ -1,7 +1,7 @@
 Options -MultiViews
 RewriteEngine On
 
-RewriteBase /framework/public
+RewriteBase /engel/public
 
 
 RewriteCond %{REQUEST_FILENAME} !-d

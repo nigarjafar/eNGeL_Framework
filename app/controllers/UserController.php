@@ -2,16 +2,28 @@
 
 class UserController extends Controller{
 
+    public $session;
+
+    function __construct()
+    {
+       $this->session = $this->loadLib('Session');
+    }
 
 
-	public function index(){
+    public function index(){
 		echo "Hello index user";
 	}
 
+
 	public function get_message(){
 		$user=$this->model('User');
-		$user->username="Nigar";
-		return $this->View('home', ['name'=>$user->username]);
+        $user->username="Nigar";
+
+        if ($user->username!="Nigar"){
+            $this->session->setSession('danger', 'girish qadagan');
+        }
+
+        return $this->View('home', ['name'=>$user->username]);
 
 	}
 

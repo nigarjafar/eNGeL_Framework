@@ -14,5 +14,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="yolcuFM" />
+    <orderEntry type="module" module-name="bumerang" />
   </component>
 </module>

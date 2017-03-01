@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/framework.iml" filepath="$PROJECT_DIR$/.idea/framework.iml" />
+      <module fileurl="file://$USER_HOME$/Desktop/bumerang/.idea/bumerang.iml" filepath="$USER_HOME$/Desktop/bumerang/.idea/bumerang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/engel.iml" filepath="$PROJECT_DIR$/.idea/engel.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../yolcuFM/.idea/yolcuFM.iml" filepath="$PROJECT_DIR$/../yolcuFM/.idea/yolcuFM.iml" />
     </modules>
   </component>
 </project>
