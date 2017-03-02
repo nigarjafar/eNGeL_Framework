@@ -11,6 +11,17 @@ class Controller{
 		require_once '../app/views/'.$url.'.php';
 	}
 
+
+    public function loadLib($name){
+	    if (file_exists('../app/library/'.$name.'.php')){
+	        require '../app/library/'. $name.'.php';
+
+	        return new $name();
+        }
+        else{
+	        echo $name.' movcud deyil. ';
+        }
+    }
 	// public function DB($table){
 	// 	require_once '../app/database/db.php';
 	// 	return new db($table,new DBConnection());
