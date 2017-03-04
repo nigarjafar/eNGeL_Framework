@@ -17,7 +17,7 @@ class fileConfig
   public function file_upload()
     {
 
-     if (isset($_POST[$this->value['submit_name']])) {
+    //  if (isset($_POST[$this->value['submit_name']])) {
 
 
     $file=$_FILES[$this->value['input_name']]['tmp_name'];
@@ -41,7 +41,7 @@ class fileConfig
           else {
             return "error";
           }
-        }
+        // }
       }
 
 

@@ -7,7 +7,13 @@
 	<title>Document</title>
 </head>
 <body>
-	<p>Hello, my name is <?php var_dump($data['name']) ?> </p>
+<h3>
+    <?php
+            echo $this->session->getSession('danger') . '<br>';
+
+    ?>
+</h3>
+	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>
 	<form method="PUT" action="test">
 		<input type="text" name="name" value="PUT">
 		<input type="submit">
