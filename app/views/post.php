@@ -5,7 +5,7 @@
     <title></title>
   </head>
   <body>
-    <form class="" action="file" method="post" enctype="multipart/form-data">
+    <form class="" action="user/file" method="post" enctype="multipart/form-data">
       <input type="file" name="file_name">
       <input type="submit" name="submit">
     </form>

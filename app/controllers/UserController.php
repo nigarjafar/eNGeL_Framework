@@ -111,8 +111,17 @@ class UserController extends Controller{
 	}
 
 	public function post_file()
-	{ 
-		$this->upload();
+	{
+		$config['input_name']='file_name';
+		$config['submit_name']='submit';
+		$config['upload_path']= 'uploads/';
+		$config['max_size'] = '2048';
+		$config['allowed_types'] = 'jpeg|jpg|png|gif';
+		$result=$this->upload($config);
+		return $this->View('upload', ['file'=>$result]);
+		//  $this->View('post',$config);
+
+
 	}
 
 }
