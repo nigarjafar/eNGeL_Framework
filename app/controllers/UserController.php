@@ -2,16 +2,30 @@
 
 class UserController extends Controller{
 
+    public $session;
+
+    function __construct()
+    {
+       $this->session = $this->loadLib('Session');
+    }
 
 
-	public function index(){
+    public function index(){
 		echo "Hello index user";
+		return $this->View('post');
+
 	}
+
 
 	public function get_message(){
 		$user=$this->model('User');
-		$user->username="Nigar";
-		return $this->View('home', ['name'=>$user->username]);
+        $user->username="Nigar";
+
+        if ($user->username!="Nigar"){
+            $this->session->setSession('danger', 'girish qadagan');
+        }
+
+        return $this->View('home', ['name'=>$user->username]);
 
 	}
 
@@ -46,7 +60,7 @@ class UserController extends Controller{
 			'name'=>'EngelFM',
 			'user_type'=>'user',
 		]);
-	
+
 	}
 
 	public function get_delete($id){
@@ -74,7 +88,7 @@ class UserController extends Controller{
 
 
 	}
-	
+
 	public function get_param( $id){
 		echo $id;
 	}
@@ -96,8 +110,9 @@ class UserController extends Controller{
 		echo "It works (Delete)";
 	}
 
-
-
-
+	public function post_file()
+	{ 
+		$this->upload();
+	}
 
 }
