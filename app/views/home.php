@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +7,11 @@
 	<title>Document</title>
 </head>
 <body>
-	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>
+	<p>Hello, my name is <?php var_dump($data['name']) ?> </p>
 	<form method="PUT" action="test">
 		<input type="text" name="name" value="PUT">
 		<input type="submit">
 	</form>
-	
+
 </body>
 </html>

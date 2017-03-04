@@ -16,9 +16,12 @@ class Controller{
 	// 	return new db($table,new DBConnection());
 	// }
 
-	public function upload($value=[])
+	public function upload($config=[])
 	{
-			$file=new fileConfig;
-			$file->file_upload($value);
+			$file=new fileConfig($config);
+			return $file->file_upload();
+
+		  // print_r($file->file_size());
 	}
+
 }
