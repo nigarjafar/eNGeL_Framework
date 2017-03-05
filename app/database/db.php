@@ -15,6 +15,12 @@ class DB {
 		$this->con=$con;
 	}
 
+	//raw function
+	public function raw($ne){
+        $this->queryStatement=$ne;
+        return $this;
+    }
+
 	public function Create($table,$data){
 		$into=null;
 		$values=null;
@@ -52,7 +58,7 @@ class DB {
 		return $this;
 	}
 
-
+//////////nigar burda where-a null beraber etdim. cunku where yazmasan error verirdi. null yazdim sakit dursun. 'gunel'
 	public function Select($table,$col='*',$where,$operator='AND'){
 		$this->SetWhereStatement($where);
 		$this->SetColumnsStatement($col);
@@ -76,6 +82,7 @@ class DB {
 
 //WHERE 
 	public function SetWhereStatement($rows,$operator='AND'){
+
 		foreach ($rows as $key => $value) {
 			$this->where=$this->where.$key.'= "'.$value.'"';
 			if($value!=end($rows))
@@ -88,19 +95,21 @@ class DB {
 
 //Get rows from db
 	public function Get(){
-	    //echo "db get";
 		$results = $this->query->fetchAll(PDO::FETCH_ASSOC);
 		//$results = $this->query->fetch(PDO::FETCH_ASSOC);
 		return $results;
 	}
 
 //Sends query
+//burada prepare execute elave etdikde sql injection-larin qabagin alir;
 	public function Query(){
 	    //echo "db query";
 		//return $this->queryStatement;
         var_dump($this->queryStatement);
-
-        $this->query = $this->con->query($this->queryStatement);
+//    echo $_POST['first'];
+//        $this->query = $this->con->prepare($this->queryStatement);
+//        $this->query->bindValue(':name', $_POST['first']);
+//        $this->query->execute();
 		$this->queryStatement=null;
 		$this->where=null;
 		$this->columns=null;
