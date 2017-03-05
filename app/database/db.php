@@ -16,8 +16,17 @@ class DB {
 		$this->con=$con;
 	}
 
+
+	//raw function
+	public function raw($ne){
+        $this->queryStatement=$ne;
+        return $this;
+    }
+
+
 	//Query will be like that: INSERT INTO #table_name (name) VALUES (:name)
 	//:name will be replaced actual value in Query.
+
 	public function Create($table,$data){
 		$into=null;
 		$values=null;
@@ -58,7 +67,6 @@ class DB {
 	}
 
 
-	//SELECT col_name FROM $table_name WHERE id=:id
 	public function Select($table,$col='*'){
 		$this->SetColumnsStatement($col);
 
@@ -104,7 +112,9 @@ class DB {
 	}
 
 //Sends query
+//burada prepare execute elave etdikde sql injection-larin qabagin alir;
 	public function Query(){
+
 	  	var_dump($this->queryStatement);
 	  	echo "<hr>";
 	  	var_dump($this->params);

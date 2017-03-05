@@ -18,8 +18,8 @@ class DBConnection extends PDO{
         catch(PDOException $e){
             die(json_encode(array('outcome' => false, 'message' => 'Unable to connect')));
         }
-        
-        
+
+
     }
 
     private function parse_ini($file){

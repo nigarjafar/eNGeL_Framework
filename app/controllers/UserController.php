@@ -22,7 +22,7 @@ class UserController extends Controller{
         $user->username="Nigar";
 
         if ($user->username!="Nigar"){
-            $this->session->setSession('danger', 'girish qadagan');
+//            $this->session->setSession('danger', 'girish qadagan');
         }
 
         return $this->View('home', ['name'=>$user->username]);
@@ -99,12 +99,22 @@ class UserController extends Controller{
 	}
 
 	public function post_test(){
-		echo "It works (POST)";
+        if (isset($_POST['submit'])){
+            $org = $_POST['first'];
+            $user=$this->model('User');
+            print_r('<pre>');
+            print_r($user->rawQuery("SELECT `id` FROM `nese` WHERE `id` = :name"));
+            print_r('</pre>');
+
+        }else{
+            echo 'not isset';
+        }
 	}
 
 	public function put_test(){
-		echo "It works (PUT)";
-	}
+        echo "It works (put)";
+
+    }
 
 	public function delete_test(){
 		echo "It works (Delete)";

@@ -11,6 +11,12 @@ class Model{
 		$this->db=new DB($con);
 	}
 
+//function for raw query
+	public function rawQuery($query){
+
+        return $this->db->raw($query)->Query()->Get();
+    }
+
 	public function setTable($table){
 		$this->table=$table;
 	}
