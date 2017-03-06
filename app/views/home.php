@@ -16,11 +16,12 @@
     }
     ?>
 </h3>
+
 	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>
 	<form method="POST" action="test" enctype="multipart/form-data">
 		<input type="text" name="first">
 		<input type="submit" name="submit">
-	</form>
+		</form>
 
 </body>
 </html>
