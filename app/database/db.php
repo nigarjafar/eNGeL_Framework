@@ -32,7 +32,7 @@ class DB {
 		$values=null;
 		foreach ($data as $key => $value) {
 			$into=$into."`".$key."`";
-
+			echo "$key";
 			$values=$values.":".$key;
 			$this->params[":".$key]=$value;
 

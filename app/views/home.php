@@ -11,9 +11,9 @@
     <?php
     echo $this->session->get_flashdata('danger') . '<br>';
 //    var_dump($this->session->hasSession('danger'));
-    if (isset($_POST['submit'])){
-        echo $_POST['first'];
-    }
+//    if (isset($_POST['submit'])){
+//        echo $_POST['first'];
+//    }
     ?>
 </h3>
 	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>

@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/engel.iml" filepath="$PROJECT_DIR$/.idea/engel.iml" />
-      <module fileurl="file://$USER_HOME$/Downloads/pdo/.idea/pdo.iml" filepath="$USER_HOME$/Downloads/pdo/.idea/pdo.iml" />
     </modules>
   </component>
 </project>

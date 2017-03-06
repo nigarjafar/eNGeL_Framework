@@ -102,8 +102,11 @@ class UserController extends Controller{
         if (isset($_POST['submit'])){
             $org = $_POST['first'];
             $user=$this->model('User');
+			$user->setTable('nese');
+
             print_r('<pre>');
-            print_r($user->rawQuery("SELECT `id` FROM `nese` WHERE `id` = :name"));
+            // print_r($user->rawQuery("SELECT `id` FROM `nese` WHERE `id` = :name"));
+            print_r($user->where('id', $org)->get('id, ad, soy'));
             print_r('</pre>');
 
         }else{
