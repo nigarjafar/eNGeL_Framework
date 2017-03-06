@@ -17,7 +17,7 @@ class fileConfig
   public function file_upload()
     {
 
-    //  if (isset($_POST[$this->value['submit_name']])) {
+     if (isset($_FILES[$this->value['input_name']])) {
 
 
     $file=$_FILES[$this->value['input_name']]['tmp_name'];
@@ -26,7 +26,7 @@ class fileConfig
    $target_file = $target_dir.basename($_FILES[$this->value['input_name']]["name"]);
 
     // call file_size method()
-      $file_size=($this->file_size())/1024;
+      $file_size=$this->file_size();
 
     // call file_type method ()
       $file_type=$this->file_type();
@@ -39,15 +39,16 @@ class fileConfig
             return $results=[$target_file,$file_size,$file_type];
           }
           else {
-            return "error";
+            return "";
           }
-        // }
+        }
       }
 
 
     public function file_size()
     {
-      return  $results=$fileSize=$_FILES[$this->value['input_name']]['size'];
+      $fileSize=$_FILES[$this->value['input_name']]['size'];
+      return  $results=round($fileSize/1024);
     }
 
     public function file_type()
