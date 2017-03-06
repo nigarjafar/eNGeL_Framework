@@ -18,17 +18,25 @@ class Session{
     public function getSession($name){
         if (isset($_SESSION[$name])){
             $message = $_SESSION[$name];
-            unset($_SESSION[$name]);
+//            unset($_SESSION[$name]);
             return $message;
-        }else{
-            return false;
+        }
+
+    }
+
+    public function get_flashdata($name){
+        if (isset($_SESSION[$name])) {
+            $temp = $_SESSION[$name];
+            $this->deleteSession($name);
+            return $temp;
         }
     }
 
+
 //    useless function !!!!!!!!!!!!
-//    public function deleteSession($name){
-//        unset($_SESSION[$name]);
-//    }
+    public function deleteSession($name){
+        unset($_SESSION[$name]);
+    }
 
     //to check if session is setted or not
     public function hasSession($name){
@@ -39,6 +47,10 @@ class Session{
             return false;
             echo $name .' session is not setted';
         }
-
     }
+
+
+    public function sessionPath($path) {
+        ini_set(session.save_path, $path);
+        }
 }

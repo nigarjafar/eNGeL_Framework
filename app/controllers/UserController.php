@@ -25,7 +25,7 @@ class UserController extends Controller{
         $user->username="Nigar";
 
         if ($user->username!="Nigar"){
-            $this->session->setSession('danger', 'girish qadagan');
+//            $this->session->setSession('danger', 'girish qadagan');
         }
 
         return $this->View('home', ['name'=>$user->username]);
@@ -35,7 +35,7 @@ class UserController extends Controller{
 	public function get_profile($id){
 		$user=$this->model('User');
 		$user->setTable('users');
-		var_dump($user->find($id)->get());
+		var_dump($user->where("id",$id)->get());
 	}
 
 	public function get_all(){
@@ -51,14 +51,15 @@ class UserController extends Controller{
 			'name'=>'Engel',
 			'email'=>'workssccchujjksd'.rand(0,29299292),
 			'user_type'=>'company',
-			'password'=>'ahuhsujd'
+			'password'=>'ahuhsujd'.rand(0,29299292)
+			
 			]);
 	}
 
 	public function get_update($id){
 		$user=$this->model('User');
 		$user->setTable('users');
-		$user->find($id)->update([
+		$user->where("id",$id)->update([
 			'name'=>'EngelFM',
 			'user_type'=>'user',
 		]);
@@ -68,7 +69,26 @@ class UserController extends Controller{
 	public function get_delete($id){
 			$user=$this->model('User');
 			$user->setTable('users');
-			$user->delete(["name"=> "Engel"]);
+			$user->where("id",$id)->delete(["name"=> "Engel"]);
+
+	}	
+
+	public function get_where($id){
+			$user=$this->model('User');
+			$user->setTable('users');
+			var_dump($user->where(	"id",">",$id)->where('name','=','Nigar')->get());
+
+	}
+	public function get_orwhere($id){
+			echo "hello";
+			$user=$this->model('User');
+			$user->setTable('users');
+			var_dump($user->where("user_type","user")
+						->where("password",'ahuhsujd')
+							->orWhere("id",">",$id)
+							->orWhere('name','=','Nigar')
+							->get());
+
 
 	}
 
@@ -78,15 +98,26 @@ class UserController extends Controller{
 
 	public function get_test(){
 		echo "It works (GET)";
+
 	}
 
 	public function post_test(){
-		echo "It works (POST)";
+        if (isset($_POST['submit'])){
+            $org = $_POST['first'];
+            $user=$this->model('User');
+            print_r('<pre>');
+            print_r($user->rawQuery("SELECT `id` FROM `nese` WHERE `id` = :name"));
+            print_r('</pre>');
+
+        }else{
+            echo 'not isset';
+        }
 	}
 
 	public function put_test(){
-		echo "It works (PUT)";
-	}
+        echo "It works (put)";
+
+    }
 
 	public function delete_test(){
 		echo "It works (Delete)";
