@@ -12,7 +12,10 @@ class UserController extends Controller{
 
     public function index(){
 		echo "Hello index user";
-		return $this->View('post');
+    // $string=word_limiter("    LaleMemmedova  ",'7');
+    $string=strmb();
+		return $this->View('home', ['string'=>$string]);
+		// return $this->View('post');
 
 	}
 
@@ -94,7 +97,7 @@ class UserController extends Controller{
 		$config['input_name']='file_name';
 		$config['submit_name']='submit';
 		$config['upload_path']= 'uploads/';
-		$config['max_size'] = '2048';
+		$config['max_size'] = '100';
 		$config['allowed_types'] = 'jpeg|jpg|png|gif';
 		$result=$this->upload($config);
 		return $this->View('upload', ['file'=>$result]);

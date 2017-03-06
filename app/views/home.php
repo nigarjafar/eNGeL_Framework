@@ -13,7 +13,7 @@
 
     ?>
 </h3>
-	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>
+	<h1>Hello, my name is <?php echo $data['string'] ?> </h1>
 	<form method="PUT" action="test">
 		<input type="text" name="name" value="PUT">
 		<input type="submit">
