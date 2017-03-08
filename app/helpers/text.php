@@ -10,12 +10,12 @@
   return  substr(trim(($value)),0,(int)$count);
 }
 
-function strmb($value='')
+function strmb($str='')
 {
-  $str = 'türkçe';
+
+ mb_strlen($str); // 8
+ mb_strlen($str,'UTF-8'); //6
 return $str; // 8
-echo mb_strlen($str); // 8
-echo mb_strlen($str,'UTF-8'); //6
 }
 
 
