@@ -12,12 +12,13 @@ class Controller{
 	}
 
 
+
 	public function loader(){
 	  if (file_exists('../app/core/Loader.php')){
 	    require '../app/core/Loader.php';
 	      return new Loader();
 	    }
-	}
+
   //   public function loadLib($name,$const=[]){
 	//     if (file_exists('../app/library/'.$name.'.php')){
 	//         require '../app/library/'. $name.'.php';

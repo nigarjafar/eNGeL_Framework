@@ -88,7 +88,6 @@ class Model{
 			$datum[2]=func_get_args()[2];
 			$this->where[count($this->where)]=$datum;
 		}
-
 		return $this;
 	}
 
