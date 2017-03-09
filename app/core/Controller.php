@@ -14,7 +14,7 @@ class Controller{
 
     public function loadLib($name){
 	    if (file_exists('../app/library/'.$name.'.php')){
-	        require '../app/library/'. $name.'.php';
+	        require_once '../app/library/'. $name.'.php';
 
 	        return new $name();
         }
