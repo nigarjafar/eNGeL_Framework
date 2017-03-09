@@ -26,10 +26,10 @@ class fileConfig
    $target_file = $target_dir.basename($_FILES[$this->value['input_name']]["name"]);
 
     // call file_size method()
-      $file_size=$this->file_size();
+      $file_size=self::file_size();
 
     // call file_type method ()
-      $file_type=$this->file_type();
+      $file_type=self::file_type();
 
 
          $type=explode('|',$this->value['allowed_types']);
