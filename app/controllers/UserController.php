@@ -5,7 +5,6 @@ class UserController extends Controller{
     private $session;
     private $valid;
 
-
     function __construct()
     {
        $this->session = $this->loadLib('Session');
@@ -13,12 +12,14 @@ class UserController extends Controller{
     }
 
 
+
     public function index(){
 		echo "Hello index user";
-    // $string=word_limiter("    LaleMemmedova  ",'7');
-    $string=strmb();
-		return $this->View('home', ['string'=>$string]);
-		// return $this->View('post');
+    $this->loader()->helper('text');
+    $string=word_limiter("    LaleMemmedova  ",'7');
+    // $string=strmb();
+		// return $this->View('home', ['string'=>$string]);
+		return $this->View('post');
 
 	}
 
@@ -55,7 +56,7 @@ class UserController extends Controller{
 			'email'=>'workssccchujjksd'.rand(0,29299292),
 			'user_type'=>'company',
 			'password'=>'ahuhsujd'.rand(0,29299292)
-			
+
 			]);
 	}
 
@@ -74,7 +75,7 @@ class UserController extends Controller{
 			$user->setTable('users');
 			$user->where("id",$id)->delete(["name"=> "Engel"]);
 
-	}	
+	}
 
 	public function get_where($id){
 			$user=$this->model('User');
@@ -151,10 +152,12 @@ class UserController extends Controller{
 		$config['upload_path']= 'uploads/';
 		$config['max_size'] = '100';
 		$config['allowed_types'] = 'jpeg|jpg|png|gif';
-		$result=$this->upload($config);
-		return $this->View('upload', ['file'=>$result]);
-		//  $this->View('post',$config);
 
+    $result=$this->loader()
+              ->library("fileConfig",$config)
+              ->file_upload();
+
+		return self::View('upload', ['file'=>$result]);
 
 	}
 
