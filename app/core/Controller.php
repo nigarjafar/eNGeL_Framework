@@ -8,6 +8,9 @@ class Controller{
 	}
 
 	public function View($url, $data=[]){
+		if ($data!=null) {
+			extract($data);
+		}
 		require_once '../app/views/'.$url.'.php';
 	}
 
@@ -18,26 +21,4 @@ class Controller{
 	      return new Loader();
 	    }
 	}
-  //   public function loadLib($name,$const=[]){
-	//     if (file_exists('../app/library/'.$name.'.php')){
-	//         require '../app/library/'. $name.'.php';
-	//
-	//         return new $name($const);
-  //       }
-  //       else{
-	//         echo $name.' movcud deyil. ';
-  //       }
-  //   }
-	// // public function DB($table){
-	// // 	require_once '../app/database/db.php';
-	// // 	return new db($table,new DBConnection());
-	// // }
-	//
-	// public function upload($config=[])
-	// {
-	// 		// $file=new fileConfig($config);
-	// 		  //  return $file->file_upload();
-	// 		return self::loadLib("fileConfig",$config)->file_upload();
-	// }
-
 }
