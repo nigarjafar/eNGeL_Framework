@@ -2,12 +2,15 @@
 
 class UserController extends Controller{
 
-    public $session;
+    private $session;
+    private $valid;
 
-    // function __construct()
-    // {
-    //    $this->session = $this->loadLib('Session');
-    // }
+    function __construct()
+    {
+       $this->session = $this->loadLib('Session');
+       $this->valid = $this->loadLib('Validation');
+    }
+
 
 
     public function index(){
@@ -21,7 +24,7 @@ class UserController extends Controller{
 	}
 
 
-	public function get_message(){
+	public function get_message($message=null){
 		$user=$this->model('User');
         $user->username="Nigar";
 
@@ -29,7 +32,7 @@ class UserController extends Controller{
 //            $this->session->setSession('danger', 'girish qadagan');
         }
 
-        return $this->View('home', ['name'=>$user->username]);
+        return $this->View('home', ['name1'=>$user->username]);
 
 	}
 
@@ -106,9 +109,27 @@ class UserController extends Controller{
         if (isset($_POST['submit'])){
             $org = $_POST['first'];
             $user=$this->model('User');
-            print_r('<pre>');
-            print_r($user->rawQuery("SELECT `id` FROM `nese` WHERE `id` = :name"));
-            print_r('</pre>');
+			$user->setTable('nese');
+
+//            print_r('<pre>');
+//            print_r($user->rawQuery("SELECT `id` FROM `nese` WHERE `id` = :name"));
+//            print_r($user->where('id', $org)->get('id, ad, soy'));
+//            print_r('</pre>');
+
+            $this->valid->validation_rules(array(
+                'first' => 'required|max_len,2',
+                'name'  => 'required|min_len,3|max_len,6'
+            ));
+
+
+            $validated_data = $this->valid->run($_POST);
+
+            if($validated_data === false) {
+                $ne = $this->valid->get_readable_errors(true);
+                $this->View('home', ['name1'=>$user->username, 'error'=>$ne]);
+            } else {
+                print_r($validated_data); // validation successful
+            }
 
         }else{
             echo 'not isset';
