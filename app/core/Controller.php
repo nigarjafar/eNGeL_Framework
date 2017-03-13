@@ -8,6 +8,9 @@ class Controller{
 	}
 
 	public function View($url, $data=[]){
+		if ($data!=null) {
+			extract($data);
+		}
 		require_once '../app/views/'.$url.'.php';
 	}
 
@@ -18,6 +21,9 @@ class Controller{
 	    require '../app/core/Loader.php';
 	      return new Loader();
 	    }
+<<<<<<< HEAD
+	}
+=======
 
   //   public function loadLib($name,$const=[]){
 	//     if (file_exists('../app/library/'.$name.'.php')){
@@ -41,4 +47,5 @@ class Controller{
 	// 		return self::loadLib("fileConfig",$config)->file_upload();
 	// }
 
+>>>>>>> ab3da853ac0ef0387bf279a8bc60c48544061451
 }

@@ -15,7 +15,7 @@ class UserController extends Controller{
 
     public function index(){
 		echo "Hello index user";
-    $this->loader()->helper('text');
+    self::loader()->helper('text');
     $string=word_limiter("    LaleMemmedova  ",'7');
     // $string=strmb();
 		// return $this->View('home', ['string'=>$string]);
@@ -153,9 +153,9 @@ class UserController extends Controller{
 		$config['max_size'] = '100';
 		$config['allowed_types'] = 'jpeg|jpg|png|gif';
 
-    $result=$this->loader()
-              ->library("fileConfig",$config)
-              ->file_upload();
+    $result=self::loader()
+                 ->library("Upload",$config)
+                 ->file_upload();
 
 		return self::View('upload', ['file'=>$result]);
 

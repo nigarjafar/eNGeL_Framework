@@ -18,8 +18,7 @@
     ?>
 </h3>
 
-	<h1>Hello, my name is <?php echo $data['string'] ?> </h1>
-
+	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>
 	<form method="POST" action="test" enctype="multipart/form-data">
 		<input type="text" name="first"><br>
         <?php if (isset($data['error']['first'])) echo $data['error']['first']?><br>
