@@ -77,7 +77,6 @@ class Model{
 			$this->db->SetWhereStatement($datum,'AND');
 
 		}
-
 		return $this;
 	}
 
