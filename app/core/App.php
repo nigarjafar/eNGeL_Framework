@@ -21,14 +21,14 @@ class App{
 
 		//Call the controller
 		require_once ('../app/controllers/'.$this->defaultController.'.php');
-		
+
 		//Create instance of controller
 		$this->defaultController=new $this->defaultController;
 
 
 		//Checking for the method
 		if(isset($url[1])){
-			
+
 			//Checking for the request method
 			$requestType=$_SERVER['REQUEST_METHOD'];
 			$method=$url[1];
@@ -42,7 +42,7 @@ class App{
 							break;
 				case "DELETE": $method= "delete_".$method;
 							break;
-				
+
 			}
 
 			if(method_exists($this->defaultController, $method))
@@ -51,7 +51,7 @@ class App{
 
 		}
 
-		
+
 		//Getting parameters
 		$this->parameters = $url ? array_values($url) : [];
 
@@ -61,9 +61,9 @@ class App{
 	}
 
 	public function getURL(){
-		
+
 		if( isset($_GET['url'])){
 			return $url = explode('/',filter_var(rtrim($_GET['url'],'/'), FILTER_SANITIZE_URL));
 		}
-	} 
+	}
 }
