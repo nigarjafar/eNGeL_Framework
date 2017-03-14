@@ -21,31 +21,5 @@ class Controller{
 	    require '../app/core/Loader.php';
 	      return new Loader();
 	    }
-<<<<<<< HEAD
 	}
-=======
-
-  //   public function loadLib($name,$const=[]){
-	//     if (file_exists('../app/library/'.$name.'.php')){
-	//         require '../app/library/'. $name.'.php';
-	//
-	//         return new $name($const);
-  //       }
-  //       else{
-	//         echo $name.' movcud deyil. ';
-  //       }
-  //   }
-	// // public function DB($table){
-	// // 	require_once '../app/database/db.php';
-	// // 	return new db($table,new DBConnection());
-	// // }
-	//
-	// public function upload($config=[])
-	// {
-	// 		// $file=new fileConfig($config);
-	// 		  //  return $file->file_upload();
-	// 		return self::loadLib("fileConfig",$config)->file_upload();
-	// }
-
->>>>>>> ab3da853ac0ef0387bf279a8bc60c48544061451
 }
