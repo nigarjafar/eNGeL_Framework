@@ -6,6 +6,7 @@
 class Img_lib
 {
   public $config;
+
   function __construct($condig=[])
   {
     $this->config=$config;

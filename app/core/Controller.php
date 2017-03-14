@@ -13,22 +13,23 @@ class Controller{
 
 
 
-	public function loader(){
-	  if (file_exists('../app/core/Loader.php')){
-	    require '../app/core/Loader.php';
-	      return new Loader();
-	    }
+	public function loader()
+    {
+        if (file_exists('../app/core/Loader.php')) {
+            require '../app/core/Loader.php';
+            return new Loader();
+        }
+    }
+     public function loadLib($name,$const=[]){
+	     if (file_exists('../app/library/'.$name.'.php')){
+	         require '../app/library/'. $name.'.php';
 
-  //   public function loadLib($name,$const=[]){
-	//     if (file_exists('../app/library/'.$name.'.php')){
-	//         require '../app/library/'. $name.'.php';
-	//
-	//         return new $name($const);
-  //       }
-  //       else{
-	//         echo $name.' movcud deyil. ';
-  //       }
-  //   }
+	         return new $name($const);
+         }
+         else{
+	         echo $name.' movcud deyil. ';
+         }
+     }
 	// // public function DB($table){
 	// // 	require_once '../app/database/db.php';
 	// // 	return new db($table,new DBConnection());
