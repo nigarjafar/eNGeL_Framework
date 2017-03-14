@@ -36,10 +36,14 @@ class UserController extends Controller{
 
 	}
 
-	public function get_profile($id){
+	public function get_profile(){
 		$user=$this->model('User');
 		$user->setTable('users');
-		var_dump($user->where("id",$id)->get());
+
+		$user=$user->distinct()->get();
+		var_dump($user);
+		
+		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
 	}
 
 	public function get_all(){

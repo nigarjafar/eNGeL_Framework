@@ -18,8 +18,6 @@ class Controller
 	 	require_once '../app/views/'.$url.'.php';
 	}
 
-
-
 	public function loader()
 		{
 		  if (file_exists('../app/core/Loader.php'))

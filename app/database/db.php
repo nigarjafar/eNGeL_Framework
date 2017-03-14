@@ -6,11 +6,15 @@ require_once('config.php');
 
 class DB {
 	private $con;
-	private $where;
-	private $columns;
-	private $queryStatement;
-	private $query;
-	private $params;
+	private $where=null;
+	private $columns=null;
+	private $queryStatement=null;
+	private $query=null;
+	private $params=null;
+	private $order=null;
+	private $limit=null;
+	private $offset=null;
+	private $distinct=null;
 
 	public function __construct($con){
 		$this->con=$con;
@@ -70,14 +74,18 @@ class DB {
 	public function Select($table,$col='*'){
 		$this->SetColumnsStatement($col);
 
-    	$this->queryStatement = 'SELECT '.$this->columns.' FROM '.$table;
-    	$this->queryStatement=is_null($this->where)?$this->queryStatement: $this->queryStatement.' WHERE '.$this->where;
+    	$this->queryStatement = 'SELECT '.$this->distinct." ".$this->columns.' FROM '.$table." ".
+    							((is_null($this->where)) ? null : ' WHERE '.$this->where." ").
+    							$this->order." ".
+    							$this->limit." ".
+    							$this->offset;
+    	//$this->queryStatement=is_null($this->where)?$this->queryStatement: $this->queryStatement.' WHERE '.$this->where.$this->order;
 		return $this;
 	}
 
 	//DELETE FROM $table_name WHERE id=:id
 	public function Delete($table){
-		$this->queryStatement= 'DELETE FROM '.$table.' WHERE '.$this->where;
+		$this->queryStatement= 'DELETE FROM `'.$table.'` WHERE '.$this->where;
 		return $this;
 	}
 
@@ -88,20 +96,113 @@ class DB {
 	}
 
 //WHERE 
-	public function SetWhereStatement($rows,$operator='AND'){
-	
-		if(!empty($rows)){
+	public function SetWhereStatement($row,$operator='AND', $helperOperator=null){
+
+		if(!empty($row)){
+			
 			if(!empty($this->where))
+
 				$this->where=$this->where.' '.$operator.' ';
 
-			foreach ($rows as $row) {
-				$this->where=$this->where.$row[0].$row[1].' :'.$row[0];
-				$this->params[":".$row[0]]=$row[2];
-				if($row!=end($rows))
-					$this->where=$this->where.' '.$operator.' ';
+				if($helperOperator){
+					echo "if <hr>";
+					
+					$this->SetHelperWhereStatement($row, $helperOperator);
 				}
+				else{
+					echo "else <hr>";
+					$this->where.=$row[0].$row[1].' ?';
+					$this->params[count($this->params)]=$row[2];
+				}
+
+				
 		}
 		
+		return $this;
+	}
+
+	public function SetHelperWhereStatement($row, $helperOperator){
+		echo "Hello helper <hr>";
+		switch ($helperOperator) {
+			case 'between':
+				//WHERE `colname` BETWEEN :from_colname AND :to_colname"
+				$this->where.=' `'.$row[0].'` BETWEEN ? AND ?';
+				$this->params[count($this->params)]=$row[1];
+				$this->params[count($this->params)]=$row[2];
+				break;
+
+			case 'notBetween':
+				//WHERE `colname` NOT BETWEEN :from_colname AND :to_colname"
+				$this->where.=' `'.$row[0].'`NOT BETWEEN ? AND ?';
+				$this->params[count($this->params)]=$row[1];
+				$this->params[count($this->params)]=$row[2];
+				break;
+
+			case 'in':
+
+				//WHERE `colname` IN (?,?,?,....?)
+				$this->where.=' `'.$row[0].'` NOT IN (';
+
+				foreach ($row[1] as $key => $value) {
+					$this->where.='?';
+					$this->params[count($this->params)]=$value;
+
+					if (next($row[1])==true) 
+						$this->where.= ",";
+				}
+
+				$this->where.=')';
+				break;
+
+			case 'notIn':
+					//WHERE `colname` NOT BETWEEN :from_colname AND :to_colname"
+					$this->where.=' `'.$row[0].'`NOT IN (';
+
+					foreach ($row[1] as $key => $value) {
+						$this->where.='?';
+						$this->params[count($this->params)]=$value;
+
+						if (next($row[1])==true) 
+							$this->where.= ",";
+					}
+
+					$this->where.=')';
+					break;
+			case 'null':
+				$this->where.=$row[0].' IS NULL';
+				break;
+			case 'notNull':
+				$this->where.=$row[0].' IS NOT NULL';
+				break;
+
+			case 'column':
+				$this->where.='`'.$row[0].'`'.$row[1].'`'.$row[2].'`';
+				break;
+				
+
+			default:
+				break;
+		}
+	}
+
+	public function SetOrderStatement($col, $rule){
+		
+		$this->order.="ORDER BY ".(($col) ? ("`".$col."` ".$rule) : $rule);
+		return $this;
+	}
+
+	public function SetLimitStatement($number){
+		$this->limit.='LIMIT '.$number;
+		return $this;
+	}
+	
+	public function SetOffsetStatement($number){
+		$this->offset.='OFFSET '.$number;
+		return $this;
+	}
+
+	public function SetDistinctStatement(){
+		$this->distinct="DISTINCT";
 		return $this;
 	}
 
@@ -114,10 +215,10 @@ class DB {
 //Sends query
 //burada prepare execute elave etdikde sql injection-larin qabagin alir;
 	public function Query(){
-
 	  	var_dump($this->queryStatement);
 	  	echo "<hr>";
 	  	var_dump($this->params);
+	  	echo "<hr>";
 
         $this->query=$this->con->prepare($this->queryStatement);
            $this->query->execute($this->params);
