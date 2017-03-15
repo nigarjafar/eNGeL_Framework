@@ -15,8 +15,11 @@
 //     if (isset($_POST['submit'])){
 //         echo $_POST['first'];
 //     }
+
+
     ?>
 </h3>
+
 
 	<h1>Hello, my name is <?php echo $data['name'] ?> </h1>
 	<form method="POST" action="test" enctype="multipart/form-data">
