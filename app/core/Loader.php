@@ -9,7 +9,7 @@ class loader
   public function library($library, $params = [])
   {
     if (Empty($library)) {
-       return  "Library Not Founded";
+       return  "Library Not Found";
     }
 
     else if (file_exists('../app/library/'.$library.'.php')){

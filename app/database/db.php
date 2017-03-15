@@ -27,11 +27,25 @@ class DB {
         return $this;
     }
 
+    public function CreateTable($table_name, $data){
+    	$this->queryStatement="CREATE TABLE ".$table_name."(";
+
+    	foreach ($data as $key => $value) {
+    		$this->queryStatement.=$key." ".$value;
+
+    		if (next($data)==true){
+				$this->queryStatement.=',';
+			}
+    	}
+
+        $this->queryStatement=")";
+
+    }
 
 	//Query will be like that: INSERT INTO #table_name (name) VALUES (:name)
 	//:name will be replaced actual value in Query.
 
-	public function Create($table,$data){
+	public function Insert($table,$data){
 		$into=null;
 		$values=null;
 		foreach ($data as $key => $value) {
@@ -79,11 +93,11 @@ class DB {
     							$this->order." ".
     							$this->limit." ".
     							$this->offset;
-    	//$this->queryStatement=is_null($this->where)?$this->queryStatement: $this->queryStatement.' WHERE '.$this->where.$this->order;
+    	
 		return $this;
 	}
 
-	//DELETE FROM $table_name WHERE id=:id
+	//DELETE FROM $table_name WHERE id=:id ...
 	public function Delete($table){
 		$this->queryStatement= 'DELETE FROM `'.$table.'` WHERE '.$this->where;
 		return $this;

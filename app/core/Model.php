@@ -26,7 +26,7 @@ class Model{
 
 	//Create new
 	public function create($data){
-		return $this->db->Create($this->table, $data)->Query();
+		return $this->db->insert($this->table, $data)->Query();
 	}
 
 	//Update row
