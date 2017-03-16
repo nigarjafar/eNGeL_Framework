@@ -6,6 +6,29 @@
  * Time: 10:58 AM
  */
 
+// validation input deyerlerinin isteye uygun tenzimlenmesi. meselen ashagidaki kimi 1 , 2 , 3 ve istenilen qeder qaydalar qoymaq mumkundur.
+//evvelce qaydalari qoyuruq sonra onu run edirik. run etidiymiz func bize true ve false qaytarir. error varsa o gorunecek.
+// erroru gormek ucun de onun true ve false oldugunu yoxlamaq gerekdir
+
+//ashagidaki qayda ile.
+//$this->valid->validation_rules(array(
+//    'first' => 'required|max_len,2',
+//    'name'  => 'required|min_len,3|max_len,6'
+//));
+//
+//
+//$validated_data = $this->valid->run($_POST);
+//
+//if($validated_data === false) {
+//    $ne = $this->valid->get_readable_errors(true);
+//    $this->View('home', ['name1'=>$user->username, 'error'=>$ne]);
+//} else {
+//    print_r($validated_data); // validation successful
+//}
+
+
+
+
 class Validation{
 
 
@@ -488,94 +511,94 @@ class Validation{
 
             switch ($e['rule']) {
                 case 'mismatch' :
-                    $resp[] = "There is no validation rule for <span class=\"$field_class\">$field</span>";
+                    $resp[$e['field']] = "There is no validation rule for <span class=\"$field_class\">$field</span>";
                     break;
                 case 'validate_required' :
                     $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field is required";
                     break;
                 case 'validate_valid_email':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field is required to be a valid email address";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field is required to be a valid email address";
                     break;
                 case 'validate_max_len':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to be $param or shorter in length";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to be $param or shorter in length";
                     break;
                 case 'validate_min_len':
                     $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to be $param or longer in length";
                     break;
                 case 'validate_exact_len':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to be exactly $param characters in length";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to be exactly $param characters in length";
                     break;
                 case 'validate_alpha':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain alpha characters(a-z)";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field may only contain alpha characters(a-z)";
                     break;
                 case 'validate_alpha_numeric':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain alpha-numeric characters";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field may only contain alpha-numeric characters";
                     break;
                 case 'validate_alpha_dash':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain alpha characters &amp; dashes";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field may only contain alpha characters &amp; dashes";
                     break;
                 case 'validate_numeric':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain numeric characters";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field may only contain numeric characters";
                     break;
                 case 'validate_integer':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain a numeric value";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field may only contain a numeric value";
                     break;
                 case 'validate_boolean':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain a true or false value";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field may only contain a true or false value";
                     break;
                 case 'validate_float':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field may only contain a float value";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field may only contain a float value";
                     break;
                 case 'validate_valid_url':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field is required to be a valid URL";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field is required to be a valid URL";
                     break;
                 case 'validate_url_exists':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> URL does not exist";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> URL does not exist";
                     break;
                 case 'validate_valid_ip':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to contain a valid IP address";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to contain a valid IP address";
                     break;
                 case 'validate_valid_cc':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to contain a valid credit card number";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to contain a valid credit card number";
                     break;
                 case 'validate_valid_name':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to contain a valid human name";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to contain a valid human name";
                     break;
                 case 'validate_contains':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to contain one of these values: ".implode(', ', $param);
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to contain one of these values: ".implode(', ', $param);
                     break;
                 case 'validate_contains_list':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to contain a value from its drop down list";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to contain a value from its drop down list";
                     break;
                 case 'validate_doesnt_contain_list':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field contains a value that is not accepted";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field contains a value that is not accepted";
                     break;
                 case 'validate_street_address':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to be a valid street address";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to be a valid street address";
                     break;
                 case 'validate_date':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to be a valid date";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to be a valid date";
                     break;
                 case 'validate_min_numeric':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to be a numeric value, equal to, or higher than $param";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to be a numeric value, equal to, or higher than $param";
                     break;
                 case 'validate_max_numeric':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to be a numeric value, equal to, or lower than $param";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to be a numeric value, equal to, or lower than $param";
                     break;
                 case 'validate_starts':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to start with $param";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to start with $param";
                     break;
                 case 'validate_extension':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field can have the following extensions $param";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field can have the following extensions $param";
                     break;
                 case 'validate_required_file':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field is required";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field is required";
                     break;
                 case 'validate_equalsfield':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field does not equal $param field";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field does not equal $param field";
                     break;
                 case 'validate_min_age':
-                    $resp[] = "The <span class=\"$field_class\">$field</span> field needs to have an age greater than or equal to $param";
+                    $resp[$e['field']] = "The <span class=\"$field_class\">$field</span> field needs to have an age greater than or equal to $param";
                     break;
                 default:
                     $resp[] = "The <span class=\"$field_class\">$field</span> field is invalid";
@@ -593,8 +616,8 @@ class Validation{
             foreach ($resp as $field => $mes) {
 //                $buffer .= "<span class=\"$error_class\">$s</span>";
                 $buffer[$field] = $mes;
-            }
 
+            }
             return $buffer;
         }
     }
@@ -2176,228 +2199,6 @@ class Validation{
 
 
 
-
-
-
-    ///////////new part
-
-//print_r('<pre>');
-//print_r($data);
-//print_r('</pre>');
-
-//
-//    //Singleton instance of GUMP
-//    protected static $instance = null;
-//
-//    // Validation rules for execution
-//    protected $validation_rules = array();
-//
-//    // Filter rules for execution
-//    protected $filter_rules = array();
-//
-//    // Instance attribute containing errors from last run
-//    protected $errors = array();
-//
-//    // Contain readable field names that have been set manually
-//    protected static $fields = array();
-//
-//    // Custom validation methods
-//    protected static $validation_methods = array();
-//
-//    // Customer filter methods
-//    protected static $filter_methods = array();
-//
-//
-//    /**
-//     * Getter/Setter for the validation rules.
-//     *
-//     * @param array $rules
-//     *
-//     * @return array
-//     */
-//    public function validation_rules(array $rules = array()){
-//
-//        if (empty($rules)){
-//            return $this->validation_rules;
-//        }
-//        $this->validation_rules = $rules;
-//    }
-//
-//
-//    /**
-//     * Getter/Setter for the filter rules.
-//     *
-//     * @param array $rules
-//     *
-//     * @return array
-//     */
-//    public function filter_rules(array $rules = array()){
-//        if (empty($rules)){
-//            return $this->filter_rules;
-//        }
-//
-//        $this->filter_rules = $rules;
-//    }
-//
-//
-//    /**
-//     * Ensure that the field counts match the validation rule counts.
-//     *
-//     * @param array $data
-//     */
-//    private function check_fields(array $data)
-//    {
-//        $ruleset = $this->validation_rules();
-//        $mismatch = array_diff_key($data, $ruleset);
-//        $fields = array_keys($mismatch);
-//
-//        foreach ($fields as $field) {
-//            $this->errors[] = array(
-//                'field' => $field,
-//                'value' => $data[$field],
-//                'rule' => 'mismatch',
-//                'param' => null,
-//            );
-//        }
-//    }
-//
-//
-//
-//    /**
-//     * Run the filtering and validation after each other.
-//     *
-//     * @param array $data
-//     * @param bool  $check_fields
-//     *
-//     * @return array
-//     *
-//     * @throws Exception
-//     */
-//     public function run(array $datas, $check_fields = false){
-//           $data = $this->filter($datas, $this->filter_rules());
-//
-//           $validated = $this->validate($data, $this->validation_rules());
-//
-//           if ($check_fields === true){
-//               $this->check_fields($data);
-//           }
-//
-//           if ($validated !== true){
-//               return false;
-//           }
-//
-//           return $data;
-//
-//     }
-//
-//
-//
-//    /**
-//     * Perform data validation against the provided ruleset.
-//     *
-//     * @param mixed $input
-//     * @param array $ruleset
-//     *
-//     * @return mixed
-//     *
-//     * @throws Exception
-//     */
-//    public function validate(array $input, array $ruleset)
-//    {
-//        $this->errors = array();
-//
-//        foreach ($ruleset as $field => $rules) {
-//
-//            $rules = explode('|', $rules);
-//
-//            if (in_array('required', $rules) || (isset($input[$field]) && !is_array($input[$field]))) {
-//                foreach ($rules as $rule) {
-//                    $method = null;
-//                    $param = null;
-//
-//                    // Check if we have rule parameters
-//                    if (strstr($rule, ',') !== false) {
-//                        $rule   = explode(',', $rule);
-//                        $method = 'validate_'.$rule[0];
-//                        $param  = $rule[1];
-//                        $rule   = $rule[0];
-//                    } else {
-//                        $method = 'validate_'.$rule;
-//                    }
-//
-//                    //self::$validation_methods[$rule] = $callback;
-//
-//                    if (is_callable(array($this, $method))) {
-//                        $result = $this->$method(
-//                            $field, $input, $param
-//                        );
-//
-//                        if (is_array($result)) {
-//                            $this->errors[] = $result;
-//                        }
-//                    } elseif(isset(self::$validation_methods[$rule])) {
-//
-//                        $result = call_user_func(self::$validation_methods[$rule], $field, $input, $param);
-//
-//                        if($result === false) {
-//                            $this->errors[] = array(
-//                                'field' => $field,
-//                                'value' => $input,
-//                                'rule' => self::$validation_methods[$rule],
-//                                'param' => $param,
-//                            );
-//                        }
-//
-//                    } else {
-//                        echo $method . 'does not exist';
-////                        throw new Exception("Validator method '$method' does not exist.");
-//                    }
-//                }
-//            }
-//        }
-//
-//        return (count($this->errors) > 0) ? $this->errors : true;
-//    }
-//
-//
-//
-//
-//    public function filter(array $input, array $filterset){
-//
-//            foreach ($filterset as $field => $filters){
-//                if (!array_key_exists($field, $input)){
-//                    continue;
-//                }
-//                $filters = explode('|', $filters);
-//
-//                foreach ($filters as $filter) {
-//                    $params = null;
-//
-//                    if (strstr($filter, ',') !== false) {
-//                        $filter = explode(',', $filter);
-//
-//                        $params = array_slice($filter, 1, count($filter) - 1);
-//
-//                        $filter = $filter[0];
-//                    }
-//
-//                    if (is_callable(array($this, 'filter_'.$filter))) {
-//                        $method = 'filter_'.$filter;
-//                        $input[$field] = $this->$method($input[$field], $params);
-//                    } elseif (function_exists($filter)) {
-//                        $input[$field] = $filter($input[$field]);
-//                    } elseif (isset(self::$filter_methods[$filter])) {
-//                        $input[$field] = call_user_func(self::$filter_methods[$filter], $input[$field], $params);
-//                    } else {
-//                        throw new Exception("Filter method '$filter' does not exist.");
-//                    }
-//                }
-//            }
-//
-//            return $input;
-//
-//        }
-/////////////
 
 
 
