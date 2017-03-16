@@ -10,7 +10,7 @@ class DB {
 	private $columns=null;
 	private $queryStatement=null;
 	private $query=null;
-	private $params=null;
+	private $params=array();
 	private $order=null;
 	private $limit=null;
 	private $offset=null;
@@ -29,7 +29,7 @@ class DB {
 
     public function CreateTable($table_name, $data){
     	$this->queryStatement="CREATE TABLE ".$table_name."(";
-
+    	var_dump($data);
     	foreach ($data as $key => $value) {
     		$this->queryStatement.=$key." ".$value;
 
@@ -38,8 +38,9 @@ class DB {
 			}
     	}
 
-        $this->queryStatement=")";
+        $this->queryStatement.=")";
 
+        return $this;
     }
 
 	//Query will be like that: INSERT INTO #table_name (name) VALUES (:name)
@@ -69,17 +70,20 @@ class DB {
 
 	//UPDATE $table_name SET name=:name
 	public function Update($table,$data){
+		echo "hello update <hr>";
 		$key_val=null;
-		foreach ($data as $key => $value) {
-			$key_val=$key_val.$key."= :".$key;
-			$this->params[":".$key]=$value;
 
 
-			if (next($data)==true){
-				$key_val=$key_val.',';
-			}
+		$keys = array_keys($data);
+
+		for($i=0; $i < count($keys); $i++) {
+		    $key_val.="`".$keys[$i]."` = ?";
+		 	array_unshift($this->params,$data[$keys[ count($keys)-$i-1]]);
+
+		 	if($i!=count($keys)-1)
+		 		$key_val.=', ';
 		}
-
+		
 		$this->queryStatement='UPDATE '.$table.' SET '.$key_val.' WHERE '.$this->where;
 		return $this;
 	}
@@ -111,7 +115,7 @@ class DB {
 
 //WHERE 
 	public function SetWhereStatement($row,$operator='AND', $helperOperator=null){
-
+		echo "hello where <hr>";
 		if(!empty($row)){
 			
 			if(!empty($this->where))
@@ -125,8 +129,8 @@ class DB {
 				}
 				else{
 					echo "else <hr>";
-					$this->where.=$row[0].$row[1].' ?';
-					$this->params[count($this->params)]=$row[2];
+					$this->where.="`".$row[0]."`".$row[1].' ?';
+					array_push($this->params,$row[2]);
 				}
 
 				
@@ -225,6 +229,11 @@ class DB {
 		$results = $this->query->fetchAll(PDO::FETCH_ASSOC);
 		return $results;
 	}
+//Get rows from db
+	public function RowCount(){
+		$results = $this->query->rowCount();
+		return $results;
+	}
 
 //Sends query
 //burada prepare execute elave etdikde sql injection-larin qabagin alir;
@@ -235,7 +244,7 @@ class DB {
 	  	echo "<hr>";
 
         $this->query=$this->con->prepare($this->queryStatement);
-           $this->query->execute($this->params);
+        $this->query->execute($this->params);
 
         //Deleting query statement
 		$this->queryStatement=null;

@@ -6,9 +6,7 @@ class Table{
 	private $columns;
 	private $db;
 
-
-	
-
+	//Set the table name and create a DBConnection object to run query
 	function __construct($table_name){
 		$this->table_name=$table_name;
 
@@ -17,16 +15,86 @@ class Table{
 	}
 
 
+	//Add column to $columns array
 	function addColumn($column_name, $column_type){
-		$columns["$column_name"]=$column_type;
+		$this->columns["$column_name"]=$column_type;
+		return $this;
+	}
+
+	//Create id column / Not Null/ Auto Increment/ Primary key
+	function id(){
+		$this->columns["id"]="INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY";
+		return $this;
+	}
+
+	function notNull(){
+		end($this->columns);         // move the internal pointer to the end of the array
+		$lastKey = key($this->columns); //get the last key
+		$this->columns[$lastKey].=" NOT NULL";//add not null
+		reset($this->columns);	//reset the place of the pointer
+		return $this;
+	}
+
+	function primaryKey(){
+		end($this->columns);         // move the internal pointer to the end of the array
+		$lastKey = key($this->columns); //get the last key
+		$this->columns[$lastKey].=" PRIMARY KEY";//add primary key keyword
+		reset($this->columns);	//reset the place of the pointer
 		return $this;
 	}
 
 
+	function unique(){
+		end($this->columns);         // move the internal pointer to the end of the array
+		$lastKey = key($this->columns); //get the last key
+		$this->columns[$lastKey].=" UNIQUE";//add unique keyword
+		reset($this->columns);	//reset the place of the pointer
+		return $this;
+	}
+
+	function autoIncrement(){
+		end($this->columns);         // move the internal pointer to the end of the array
+		$lastKey = key($this->columns); //get the last key
+		$this->columns[$lastKey].=" AUTO_INCREMENT";//add unique keyword
+		reset($this->columns);	//reset the place of the pointer
+		return $this;
+	}
+
+	function defaultValue($value){
+		end($this->columns);         // move the internal pointer to the end of the array
+		$lastKey = key($this->columns); //get the last key
+		$this->columns[$lastKey].=" DEFAULT '".$value."'";//add default keyword
+		reset($this->columns);	//reset the place of the pointer
+		return $this;
+	}
+
+	function nullable($value){
+		end($this->columns);         // move the internal pointer to the end of the array
+		$lastKey = key($this->columns); //get the last key
+		$this->columns[$lastKey].=" NULL";//add null keyword
+		reset($this->columns);	//reset the place of the pointer
+		return $this;
+	}
+
+	//Add creating_time and last_updating_time columns
+	function timeLog(){
+		$this->columns["created_at"]="TIMESTAMP";
+		$this->columns["updated_at"]="TIMESTAMP";
+		return $this;
+	}
+
+	function softDelete(){
+		$this->columns["deleted_at"]="TIMESTAMP";
+		return $this;
+	}
+	//Send query to db.php
 	function save(){
+		var_dump($this->columns);
 		$this->db->CreateTable($this->table_name,$this->columns)->Query();
 		return $this;
 	}
+
+
 
 
 }

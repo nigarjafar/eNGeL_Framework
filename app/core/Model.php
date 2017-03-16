@@ -4,7 +4,8 @@ class Model{
 	protected $db;
 	protected $id;
 	public $table;
-	public $where;
+	protected $where;
+	protected $withTrash=false;
 	public function __construct(){
 		$con=new DBConnection();
 		$this->db=new DB($con);
@@ -30,23 +31,56 @@ class Model{
 	}
 
 	//Update row
-	public function update($data){
-		$this->db->Update($this->table,$data)->Query();
 
-        return $this;
+	public function update($data){
+
+		//Check for soft delete is set or not. If soft delete is used, result will be only NoN delete rows.
+		//if withTrashed function is called , so withTrashed will be true, !withTrashed will be false
+		// And whereNull('deleted_at') won't run.
+
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash)
+			$this->whereNull('deleted_at');
+
+		$this->withTrash=false;
+
+		return $this->db->Update($this->table,$data)->Query()->rowCount();
+
 	}
 
-	//Delete row
-	public function delete($where=null,$operator='AND' ){
-		
+	//if softDelete is true, update deleted_at by current time
+	//else delete row
+	public function delete(){
+		if(isset($this->softDelete) && $this->softDelete)
+			$this->update(["deleted_at"=> date('Y-m-d H:i:s')]);
+		else
+			$this->db->	Delete($this->table)->Query();
+
+
+		return $this;
+	}
+	//Delete row without checking softdelete
+	public function forceDelete(){
 		$this->db->	Delete($this->table)->Query();
+		return $this;
+	}
 
-
+	//Recover soft deleted rows
+	public function recover(){
+		$this->withTrash()->update(["deleted_at"=>null]);
 		return $this;
 	}
 
 	//Return row from DB
 	public function get($rows='*'){
+
+		//Check for soft delete is set or not. If soft delete is used, result will be only NoN delete rows.
+		//if withTrashed function is called , so withTrashed will be true, !withTrashed will be false
+		// And whereNull('deleted_at') won't run.
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash)
+			$this->whereNull('deleted_at');
+
+		$this->withTrash=false;
+
 		return $this->db->
 				Select($this->table,$rows)->Query()->Get();
 	}
@@ -106,6 +140,11 @@ class Model{
 
 		}
 
+		return $this;
+	}
+
+	public function withTrash(){
+		$this->withTrash=true;
 		return $this;
 	}
 

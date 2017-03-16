@@ -5,11 +5,11 @@ class UserController extends Controller{
     private $session;
     private $valid;
 
-    function __construct()
-    {
-       $this->session = $this->loadLib('Session');
-       $this->valid = $this->loadLib('Validation');
-    }
+    // function __construct()
+    // {
+    //    $this->session = $this->loadLib('Session');
+    //    $this->valid = $this->loadLib('Validation');
+    // }
 
 
 
@@ -40,7 +40,7 @@ class UserController extends Controller{
 		$user=$this->model('User');
 		$user->setTable('users');
 
-		$user=$user->distinct()->get();
+		$user=$user->where('id','>',0)->get();
 		var_dump($user);
 		
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
@@ -67,17 +67,26 @@ class UserController extends Controller{
 	public function get_update($id){
 		$user=$this->model('User');
 		$user->setTable('users');
-		$user->where("id",$id)->update([
+		$user=$user->withTrash()->where("id",$id)->update([
 			'name'=>'EngelFM',
 			'user_type'=>'user',
 		]);
+
+		var_dump($user);
 
 	}
 
 	public function get_delete($id){
 			$user=$this->model('User');
 			$user->setTable('users');
-			$user->where("id",$id)->delete(["name"=> "Engel"]);
+			$user->where("id",$id)->where('name',"Nigar")->forceDelete();
+
+	}
+
+	public function get_recover($id){
+			$user=$this->model('User');
+			$user->setTable('users');
+			$user->where("id",'>',0)->recover();
 
 	}
 
