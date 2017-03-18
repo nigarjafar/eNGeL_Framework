@@ -32,11 +32,7 @@
     <title></title>
   </head>
   <body>
-    <?php
-    print_r($test);
-    var_dump($test);
-     ?>
     <h1>This is test view</h1>
-   <!-- <img src="../>" alt=""> -->
+   <img src="../uploads/mypic-exact.jpg" alt="">
   </body>
 </html>
