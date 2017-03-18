@@ -26,11 +26,19 @@ class UserController extends Controller{
 
 	public function get_message($message=null){
 		$user=$this->model('User');
-        $user->username="Nigar";
+        $user->username="Gunel";
 
-        if ($user->username!="Nigar"){
+        if ($user->username!="Gunel"){
 //            $this->session->setSession('danger', 'girish qadagan');
         }
+//encryption part
+//
+//        $data = "hello little lorem ipsum bla bla blsdl";
+//
+//        $enc = $this->loadLib('Encryption');
+//        $hashed = $enc->generateKey($data, 'first');
+//        var_dump($hashed);
+
 
         return $this->View('home', ['name1'=>$user->username]);
 
@@ -40,7 +48,7 @@ class UserController extends Controller{
 		$user=$this->model('User');
 		$user->setTable('users');
 
-		$user=$user->distinct()->get();
+		$user=$user->where('id','>',0)->get();
 		var_dump($user);
 
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
@@ -67,17 +75,26 @@ class UserController extends Controller{
 	public function get_update($id){
 		$user=$this->model('User');
 		$user->setTable('users');
-		$user->where("id",$id)->update([
+		$user=$user->withTrash()->where("id",$id)->update([
 			'name'=>'EngelFM',
 			'user_type'=>'user',
 		]);
+
+		var_dump($user);
 
 	}
 
 	public function get_delete($id){
 			$user=$this->model('User');
 			$user->setTable('users');
-			$user->where("id",$id)->delete(["name"=> "Engel"]);
+			$user->where("id",$id)->where('name',"Nigar")->forceDelete();
+
+	}
+
+	public function get_recover($id){
+			$user=$this->model('User');
+			$user->setTable('users');
+			$user->where("id",'>',0)->recover();
 
 	}
 
@@ -95,7 +112,8 @@ class UserController extends Controller{
 						->where("password",'ahuhsujd')
 							->orWhere("id",">",$id)
 							->orWhere('name','=','Nigar')
-							->get());
+							->get()
+            );
 
 
 	}
@@ -121,10 +139,9 @@ class UserController extends Controller{
 //            print_r('</pre>');
 
             $this->valid->validation_rules(array(
-                'first' => 'required|max_len,2',
+                'first' => 'required|min_len,2',
                 'name'  => 'required|min_len,3|max_len,6'
             ));
-
 
             $validated_data = $this->valid->run($_POST);
 
@@ -132,8 +149,25 @@ class UserController extends Controller{
                 $ne = $this->valid->get_readable_errors(true);
                 $this->View('home', ['name1'=>$user->username, 'error'=>$ne]);
             } else {
-                print_r($validated_data); // validation successful
+//                print_r($validated_data); // validation successful
+
+                $enc = $this->loadLib('Encryption');
+                $hashed = $enc->encryptData('passwoord', 17);
+
+//                $user->create([
+//                    'ad'=>$_POST['first'],
+//                    'soy'=>$_POST['name'],
+//                    //nezere alaq uni password-du ona gore ishleyek.
+//                    'uni'=> $hashed
+//
+//                ]);
             }
+//            $dat = $user->get('uni');
+//            foreach ($dat as $key){
+//                $aa = $key['uni'];
+//                $dd = $enc->decryptData($aa, 17);
+//                var_dump($dd);
+//            }
 
         }else{
             echo 'not isset';
