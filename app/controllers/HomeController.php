@@ -1,21 +1,24 @@
 <?php
 
-class HomeController extends Controller{
+class HomeController extends Controller
+{
 	protected $value;
-	public function index(){
+	public function index()
+	{
 		echo "Hello index home\n";
 	}
 
 	public function get_about()
 	{
-		$config['source_image'] = 'uploads/mypic.jpg';
-		$config['width']         = "";
-		$config['height']       = 50;
-		  $result['test']=$this->loader()
-							  	->library('Img_lib',$config)->resize();
+		$fileName = 'uploads/mypic.jpg';
+		  $result=$this->loader()
+							  	->library('Img_lib',$fileName);
+									$result->resize(30,30,'exact');
+									$result->saveImage('uploads/mypic-exact.jpg');
+
 
   // print_r($result);
-		return self::View('test',$result);
+		return self::View('test');
 	}
 
 }

@@ -15,7 +15,7 @@ class UserController extends Controller{
 
     public function index(){
 		echo "Hello index user";
-    self::loader()->helper('text');
+    $this->loader()->helper('text');
     $string=word_limiter("    LaleMemmedova  ",'7');
     // $string=strmb();
 		// return $this->View('home', ['string'=>$string]);
@@ -50,7 +50,7 @@ class UserController extends Controller{
 
 		$user=$user->where('id','>',0)->get();
 		var_dump($user);
-		
+
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
 	}
 
@@ -191,11 +191,11 @@ class UserController extends Controller{
 		$config['max_size'] = '100';
 		$config['allowed_types'] = 'jpeg|jpg|png|gif';
 
-    $result=self::loader()
+    $result=$this->loader()
                  ->library("Upload",$config)
                  ->file_upload();
 
-		return self::View('upload', ['file'=>$result]);
+		return $this->View('upload', ['file'=>$result]);
 
 	}
 
