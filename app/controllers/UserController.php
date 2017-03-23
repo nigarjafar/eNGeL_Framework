@@ -5,18 +5,21 @@ class UserController extends Controller{
     private $session;
     private $valid;
 
+
     // function __construct()
     // {
     //    $this->session = $this->loadLib('Session');
     //    $this->valid = $this->loadLib('Validation');
+    //    $this->enc=$this->loadLib('Validation');
     // }
 
 
 
     public function index(){
 		echo "Hello index user";
-    self::loader()->helper('text');
-    $string=word_limiter("    LaleMemmedova  ",'7');
+    	self::loader()->helper('text');
+    	$string=word_limiter("    LaleMemmedova  ",'7');
+
     // $string=strmb();
 		// return $this->View('home', ['string'=>$string]);
 		return $this->View('post');
@@ -48,7 +51,7 @@ class UserController extends Controller{
 		$user=$this->model('User');
 		$user->setTable('users');
 
-		$user=$user->where('id','>',0)->get();
+		$user=$user->get();
 		var_dump($user);
 		
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
@@ -57,7 +60,7 @@ class UserController extends Controller{
 	public function get_all(){
 		$user=$this->model('User');
 		$user->setTable('users');
-		var_dump($user->all());
+		
 	}
 
 	public function get_create(){

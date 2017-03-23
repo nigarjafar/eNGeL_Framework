@@ -11,23 +11,19 @@ class Model{
 		$this->db=new DB($con);
 	}
 
-//function for raw query
+	//function for raw query
 	public function rawQuery($query){
-
         return $this->db->raw($query)->Query()->Get();
     }
-
+    //set table name
 	public function setTable($table){
 		$this->table=$table;
 	}
 
-	public function all($rows='*'){
-		return $this->db->Select($this->table,$rows)->Query()->Get();
-	}
-
-	//Create new
+	//Create new row
 	public function create($data){
-		return $this->db->insert($this->table, $data)->Query();
+		$this->db->insert($this->table, $data)->Query();
+		return $this;
 	}
 
 	//Update row
@@ -71,7 +67,7 @@ class Model{
 	}
 
 	//Return row from DB
-	public function get($rows='*'){
+	public function get($cols='*'){
 
 		//Check for soft delete is set or not. If soft delete is used, result will be only NoN delete rows.
 		//if withTrashed function is called , so withTrashed will be true, !withTrashed will be false
@@ -82,9 +78,10 @@ class Model{
 		$this->withTrash=false;
 
 		return $this->db->
-				Select($this->table,$rows)->Query()->Get();
+				Select($this->table,$cols)->Query()->Get();
 	}
 
+	//Set where statement. 
 	public function where(){
 		// where ([ [key,operator,value],[key,operator,value],.... ])
 		if(func_num_args()==1){
@@ -114,8 +111,8 @@ class Model{
 		return $this;
 	}
 
+	
 	public function orWhere(){
-		
 		// orWhere ([ [key,operator,value],[key,operator,value],.... ])
 		if(func_num_args()==1){
 			foreach (func_get_args()[0] as $datum) {
