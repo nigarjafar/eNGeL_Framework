@@ -2,35 +2,24 @@
 
 class UserController extends Controller{
 
-    private $session;
+ 	private $session;
     private $valid;
-
-
     // function __construct()
     // {
     //    $this->session = $this->loadLib('Session');
     //    $this->valid = $this->loadLib('Validation');
-    //    $this->enc=$this->loadLib('Validation');
     // }
-
-
-
     public function index(){
 		echo "Hello index user";
-    	self::loader()->helper('text');
-    	$string=word_limiter("    LaleMemmedova  ",'7');
-
+    $this->loader()->helper('text');
+    $string=word_limiter("    LaleMemmedova  ",'7');
     // $string=strmb();
 		// return $this->View('home', ['string'=>$string]);
 		return $this->View('post');
-
 	}
-
-
 	public function get_message($message=null){
 		$user=$this->model('User');
         $user->username="Gunel";
-
         if ($user->username!="Gunel"){
 //            $this->session->setSession('danger', 'girish qadagan');
         }
@@ -41,10 +30,7 @@ class UserController extends Controller{
 //        $enc = $this->loadLib('Encryption');
 //        $hashed = $enc->generateKey($data, 'first');
 //        var_dump($hashed);
-
-
         return $this->View('home', ['name1'=>$user->username]);
-
 	}
 
 	public function get_profile(){
@@ -53,7 +39,7 @@ class UserController extends Controller{
 
 		$user=$user->get();
 		var_dump($user);
-		
+
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
 	}
 
@@ -194,11 +180,11 @@ class UserController extends Controller{
 		$config['max_size'] = '100';
 		$config['allowed_types'] = 'jpeg|jpg|png|gif';
 
-    $result=self::loader()
+    $result=$this->loader()
                  ->library("Upload",$config)
                  ->file_upload();
 
-		return self::View('upload', ['file'=>$result]);
+		return $this->View('upload', ['file'=>$result]);
 
 	}
 
