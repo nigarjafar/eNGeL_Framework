@@ -4,11 +4,17 @@ class UserController extends Controller{
 
     private $session;
     private $valid;
+    private $enc;
+//    private $laod;
 
     function __construct()
     {
-       $this->session = $this->loadLib('Session');
-       $this->valid = $this->loadLib('Validation');
+        $loader= self::loader();
+
+        $this->session=$loader->library('Session');
+        $this->valid=$loader->library('Validation');
+        $this->enc=$loader->library('Encryption');
+
     }
 
 
@@ -16,7 +22,7 @@ class UserController extends Controller{
     public function index(){
 		echo "Hello index user";
     self::loader()->helper('text');
-    $string=word_limiter("    LaleMemmedova  ",'7');
+    $string=word_limiter("LaleMemmedova  ",'7');
     // $string=strmb();
 		// return $this->View('home', ['string'=>$string]);
 		return $this->View('post');
@@ -142,8 +148,8 @@ class UserController extends Controller{
             } else {
 //                print_r($validated_data); // validation successful
 
-                $enc = $this->loadLib('Encryption');
-                $hashed = $enc->encryptData('passwoord', 17);
+//                $this->enc->settingParams('blaaa','wsshh',256);
+//                $hashed = $this->enc->encrypt();
 
 //                $user->create([
 //                    'ad'=>$_POST['first'],
@@ -153,12 +159,7 @@ class UserController extends Controller{
 //
 //                ]);
             }
-//            $dat = $user->get('uni');
-//            foreach ($dat as $key){
-//                $aa = $key['uni'];
-//                $dd = $enc->decryptData($aa, 17);
-//                var_dump($dd);
-//            }
+
 
         }else{
             echo 'not isset';
