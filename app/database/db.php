@@ -16,6 +16,7 @@ class DB {
 	private $offset=null;
 	private $distinct=null;
 	private $foreignKeys=null;
+	private $join=array();
 
 	public function __construct($con){
 		$this->con=$con;
@@ -92,8 +93,10 @@ class DB {
 
 	public function Select($table,$col='*'){
 		$this->SetColumnsStatement($col);
+		
 
     	$this->queryStatement = 'SELECT '.$this->distinct." ".$this->columns.' FROM '.$table." ".
+    							implode(" ", $this->join)." ".
     							((is_null($this->where)) ? null : ' WHERE '.$this->where." ").
     							$this->order." ".
     							$this->limit." ".
@@ -119,17 +122,13 @@ class DB {
 		echo "hello where <hr>";
 		if(!empty($row)){
 			
-			if(!empty($this->where))
-
-				$this->where=$this->where.' '.$operator.' ';
+				if(!empty($this->where))
+					$this->where=$this->where.' '.$operator.' ';
 
 				if($helperOperator){
-					echo "if <hr>";
-					
 					$this->SetHelperWhereStatement($row, $helperOperator);
 				}
 				else{
-					echo "else <hr>";
 					$this->where.="`".$row[0]."`".$row[1].' ?';
 					array_push($this->params,$row[2]);
 				}
@@ -204,6 +203,17 @@ class DB {
 		}
 	}
 
+	// Set Join statement and add the join array
+	public function SetJoinStatement($joinType,$table,$baseTableCol=null,$operator=null,$joinTableCol=null){
+		if($joinType=="CROSS"){
+			array_push($this->join,$joinType." JOIN ".$table);
+		}
+		else{
+			array_push($this->join,$joinType." JOIN ".$table." ON ".$baseTableCol." ".$operator." ".$joinTableCol);
+		}
+		return $this;
+	}
+
 	public function SetOrderStatement($col, $rule){
 		
 		$this->order.="ORDER BY ".(($col) ? ("`".$col."` ".$rule) : $rule);
@@ -263,6 +273,7 @@ class DB {
 		$this->limit=null;
 		$this->offset=null;
 		$this->distinct=null;
+		$this->join=array();
 		return $this;
 
 

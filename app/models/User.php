@@ -1,7 +1,11 @@
 <?php
 
 class User extends Model{
-	public $username;
+	public $table="users";
 	protected $softDelete=true;
+
+	public function company(){
+		return $this->hasOne("Company");
+	}
 	
 }
