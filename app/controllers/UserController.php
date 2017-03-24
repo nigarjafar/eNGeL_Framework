@@ -2,32 +2,34 @@
 
 class UserController extends Controller{
 
-    private $session;
+ 	private $session;
     private $valid;
+    private $enc;
 
-    // function __construct()
-    // {
-    //    $this->session = $this->loadLib('Session');
-    //    $this->valid = $this->loadLib('Validation');
-    // }
+    function __construct()
+    {
+        $loader= self::loader();
 
+        $this->session=$loader->library('Session');
+        $this->valid=$loader->library('Validation');
+        $this->enc=$loader->library('Encryption');
+
+    }
 
 
     public function index(){
-		echo "Hello index user";
+
+        echo "Hello index user";
     $this->loader()->helper('text');
     $string=word_limiter("    LaleMemmedova  ",'7');
+
     // $string=strmb();
 		// return $this->View('home', ['string'=>$string]);
 		return $this->View('post');
-
 	}
-
-
 	public function get_message($message=null){
 		$user=$this->model('User');
         $user->username="Gunel";
-
         if ($user->username!="Gunel"){
 //            $this->session->setSession('danger', 'girish qadagan');
         }
@@ -38,17 +40,14 @@ class UserController extends Controller{
 //        $enc = $this->loadLib('Encryption');
 //        $hashed = $enc->generateKey($data, 'first');
 //        var_dump($hashed);
-
-
         return $this->View('home', ['name1'=>$user->username]);
-
 	}
 
 	public function get_profile(){
 		$user=$this->model('User');
 		$user->setTable('users');
 
-		$user=$user->where('id','>',0)->get();
+		$user=$user->get();
 		var_dump($user);
 
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
@@ -57,7 +56,7 @@ class UserController extends Controller{
 	public function get_all(){
 		$user=$this->model('User');
 		$user->setTable('users');
-		var_dump($user->all());
+		
 	}
 
 	public function get_create(){
@@ -151,8 +150,8 @@ class UserController extends Controller{
             } else {
 //                print_r($validated_data); // validation successful
 
-                $enc = $this->loadLib('Encryption');
-                $hashed = $enc->encryptData('passwoord', 17);
+//                $this->enc->settingParams('blaaa','wsshh',256);
+//                $hashed = $this->enc->encrypt();
 
 //                $user->create([
 //                    'ad'=>$_POST['first'],
@@ -162,12 +161,7 @@ class UserController extends Controller{
 //
 //                ]);
             }
-//            $dat = $user->get('uni');
-//            foreach ($dat as $key){
-//                $aa = $key['uni'];
-//                $dd = $enc->decryptData($aa, 17);
-//                var_dump($dd);
-//            }
+
 
         }else{
             echo 'not isset';

@@ -26,4 +26,5 @@ class Controller
 		    return new Loader();
 		  }
 	}
+
 }

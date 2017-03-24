@@ -15,6 +15,7 @@ class DB {
 	private $limit=null;
 	private $offset=null;
 	private $distinct=null;
+	private $foreignKeys=null;
 
 	public function __construct($con){
 		$this->con=$con;
@@ -22,8 +23,8 @@ class DB {
 
 
 	//raw function
-	public function raw($ne){
-        $this->queryStatement=$ne;
+	public function raw($query){
+        $this->queryStatement=$query;
         return $this;
     }
 
@@ -38,7 +39,7 @@ class DB {
 			}
     	}
 
-        $this->queryStatement.=")";
+        $this->queryStatement.=$this->foreignKeys.')';
 
         return $this;
     }
@@ -235,6 +236,13 @@ class DB {
 		return $results;
 	}
 
+
+//Add foreign key
+	public function AddForeignKey($col, $referenceTable, $referenceCol){
+		$this->foreignKeys.=', Foreign Key ('.$col.') REFERENCES '.$referenceTable.'('.$referenceCol.')' ;
+		return $this;
+	}
+
 //Sends query
 //burada prepare execute elave etdikde sql injection-larin qabagin alir;
 	public function Query(){
@@ -246,12 +254,18 @@ class DB {
         $this->query=$this->con->prepare($this->queryStatement);
         $this->query->execute($this->params);
 
-        //Deleting query statement
+        //Deleting query statement and data
 		$this->queryStatement=null;
 		$this->where=null;
 		$this->columns=null;
 		$this->params=null;
+		$this->order=null;
+		$this->limit=null;
+		$this->offset=null;
+		$this->distinct=null;
 		return $this;
+
+
 	}
 
 

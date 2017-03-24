@@ -5,6 +5,7 @@ class Table{
 	private $table_name;
 	private $columns;
 	private $db;
+	private $foreignKeys=array();
 
 	//Set the table name and create a DBConnection object to run query
 	function __construct($table_name){
@@ -27,6 +28,8 @@ class Table{
 		return $this;
 	}
 
+
+	//Doesn't allow null values
 	function notNull(){
 		end($this->columns);         // move the internal pointer to the end of the array
 		$lastKey = key($this->columns); //get the last key
@@ -35,6 +38,7 @@ class Table{
 		return $this;
 	}
 
+	//add primary key constraint
 	function primaryKey(){
 		end($this->columns);         // move the internal pointer to the end of the array
 		$lastKey = key($this->columns); //get the last key
@@ -44,6 +48,7 @@ class Table{
 	}
 
 
+	//add unique constraint
 	function unique(){
 		end($this->columns);         // move the internal pointer to the end of the array
 		$lastKey = key($this->columns); //get the last key
@@ -52,6 +57,8 @@ class Table{
 		return $this;
 	}
 
+
+	//Add auto_increment constraint
 	function autoIncrement(){
 		end($this->columns);         // move the internal pointer to the end of the array
 		$lastKey = key($this->columns); //get the last key
@@ -60,6 +67,7 @@ class Table{
 		return $this;
 	}
 
+	// provide default value
 	function defaultValue($value){
 		end($this->columns);         // move the internal pointer to the end of the array
 		$lastKey = key($this->columns); //get the last key
@@ -68,6 +76,7 @@ class Table{
 		return $this;
 	}
 
+	//Allow null values
 	function nullable($value){
 		end($this->columns);         // move the internal pointer to the end of the array
 		$lastKey = key($this->columns); //get the last key
@@ -83,14 +92,32 @@ class Table{
 		return $this;
 	}
 
+
+	//Add deleted_at column. 
 	function softDelete(){
 		$this->columns["deleted_at"]="TIMESTAMP";
+		return $this;
+	}
+
+	//Add foreign key
+	function foreignKey($referenceTable,$referenceCol){
+		var_dump($this->columns);
+		end($this->columns);         // move the internal pointer to the end of the array
+		$lastKey = key($this->columns); //get the last key
+	
+		echo "---------------------".$lastKey."------------------------";
+		array_push($this->foreignKeys, [$lastKey,$referenceTable,$referenceCol ]);
+		reset($this->columns);	//reset the place of the pointer
 		return $this;
 	}
 	//Send query to db.php
 	function save(){
 		var_dump($this->columns);
+		foreach ($this->foreignKeys as $key=>$value) {
+			$this->db->AddForeignKey($value[0],$value[1],$value[2]);
+		}
 		$this->db->CreateTable($this->table_name,$this->columns)->Query();
+
 		return $this;
 	}
 
