@@ -1,30 +1,3 @@
-<?php
-
-// // Dosya ve yeni boyut
-// $dosya = 'uploads/mypic.jpg';
-// // $filename='dont.jpg';
-// // // İçerik türü
-// // // header('Content-type: image/jpeg');
-// //
-// // // Yeni resmin boyutları
-// list($gen, $yük) = getimagesize($dosya);
-// //
-// $oran = $gen/$yük;
-// // $yenigen = $gen * $oran;
-// $yenigen =600;
-// $yeniyük = ($yük /$gen) * $yenigen;
-// //
-// // // Resimleri yükleyelim
-// $kaynak = imagecreatefromjpeg($dosya);
-// $hedef = imagecreatetruecolor($yenigen, $yeniyük);
-// //
-// // // Resmi örnekleyelim
-// imagecopyresampled($hedef, $kaynak, 0, 0, 0, 0, $yenigen, $yeniyük, $gen, $yük);
-// //
-// // // Resmi çıktılayalım
-// imagejpeg($hedef,$dosya,80);
-//
-// ?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -32,6 +5,11 @@
     <title></title>
   </head>
   <body>
+    <?php
+    // echo "<pre>";
+    // print_r($file);
+    //   echo "</pre>";
+     ?>
     <h1>This is test view</h1>
    <img src="../uploads/mypic-exact.jpg" alt="">
   </body>
