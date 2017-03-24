@@ -26,14 +26,4 @@ class Controller
 		    return new Loader();
 		  }
 	}
-
-    public function loader()
-    {
-        if (file_exists('../app/core/Loader.php')) {
-            require '../app/core/Loader.php';
-            return new Loader();
-        }
-    }
 }
-
-
