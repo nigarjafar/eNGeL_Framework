@@ -1,11 +1,11 @@
 <?php
 
 class Model{
-	protected $db;
-	protected $id;
+	private $db;
 	public $table;
 	protected $where;
 	protected $withTrash=false;
+	protected $attributes; 
 	public function __construct(){
 		$con=new DBConnection();
 		$this->db=new DB($con);
@@ -35,7 +35,8 @@ class Model{
 		// And whereNull('deleted_at') won't run.
 
 		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash)
-			$this->whereNull('deleted_at');
+			$this->whereNull($this->table.'.deleted_at');
+		
 
 		$this->withTrash=false;
 
@@ -67,18 +68,36 @@ class Model{
 	}
 
 	//Return row from DB
-	public function get($cols='*'){
+	public function get(){
 
 		//Check for soft delete is set or not. If soft delete is used, result will be only NoN delete rows.
 		//if withTrashed function is called , so withTrashed will be true, !withTrashed will be false
 		// And whereNull('deleted_at') won't run.
-		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash)
-			$this->whereNull('deleted_at');
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+		//Get result from database .  If there is any argument,then we send them by func_get_args method
+		if(func_num_args()>0)
+			$dbResults= $this->db->Select($this->table,func_get_args())->Query()->Get();
+		else 
+			$dbResults= $this->db->Select($this->table)->Query()->Get();
+		//This will be returned as result
+		$objects=array();
+		
+		//Creating models foreach db result
+		foreach($dbResults as $dbKey => $result){
+			//Create new model
+			$model=new $this();
+			//Set dynamic parameters
+			foreach ($result as $key => $value) {
+				$model->$key=$value;
+			}
+			array_push($objects,$model);
+		}
+		
+		return $objects;
 
-		$this->withTrash=false;
-
-		return $this->db->
-				Select($this->table,$cols)->Query()->Get();
 	}
 
 	//Set where statement. 
@@ -240,10 +259,14 @@ class Model{
 		return $this;
 	}
 
-	public function first($rows='*'){
-		$this->db->SetLimitStatement(1);
-		return $this->db->
-				Select($this->table,$rows)->Query()->Get()[0];
+	public function first(){
+		//If no argument (cols) is specified
+		if (!func_num_args())
+			return $this->limit(1)->get()[0];
+		//if there are arguments
+		//Implode them bt comma and call get function
+		else
+			return $this->limit(1)->get(implode(',',func_get_args()))[0];
 	}
 
 	public function offset($number){
@@ -252,27 +275,42 @@ class Model{
 	}
 
 	public function count(){
-		return $this->db->
-				Select($this->table,"COUNT(*)")->Query()->Get();
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+		return $this->db->Select($this->table,"COUNT(*)")->Query()->Get();
 	}
 
 	public function max($col){
-		return $this->db->
-				Select($this->table,"MAX(`".$col."`)")->Query()->Get();
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+		return $this->db->Select($this->table,"MAX(`".$col."`)")->Query()->Get();
 	}
 	public function min($col){
-		return $this->db->
-				Select($this->table,"MIN(`".$col."`)")->Query()->Get();
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+		return $this->db->Select($this->table,"MIN(`".$col."`)")->Query()->Get();
 	}
 
 	public function avg($col){
-		return $this->db->
-				Select($this->table,"AVG(`".$col."`)")->Query()->Get();
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+		return $this->db->Select($this->table,"AVG(`".$col."`)")->Query()->Get();
 	}
 
 	public function sum($col){
-		return $this->db->
-				Select($this->table,"SUM(`".$col."`)")->Query()->Get();
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+		return $this->db->Select($this->table,"SUM(`".$col."`)")->Query()->Get();
 	}
 
 	public function distinct(){
@@ -281,7 +319,84 @@ class Model{
 				
 	}
 
+	public function join($joinTable,$baseTableCol,$operator,$joinTableCol){
+		$this->db->SetJoinStatement("INNER",$joinTable,$baseTableCol,$operator,$joinTableCol);
+		return $this;	
+	}
 
+	public function leftJoin($joinTable,$baseTableCol,$operator,$joinTableCol){
+		$this->db->SetJoinStatement("LEFT",$joinTable,$baseTableCol,$operator,$joinTableCol);
+		return $this;	
+	}
+
+	public function rightJoin($joinTable,$baseTableCol,$operator,$joinTableCol){
+		$this->db->SetJoinStatement("RIGHT",$joinTable,$baseTableCol,$operator,$joinTableCol);
+		return $this;	
+	}
+	
+	public function crossJoin($joinTable){
+		$this->db->SetJoinStatement("CROSS",$joinTable);
+		return $this;	
+	}
+
+	public function hasOne($model,$baseTableCol="id",$relTableCol=null){
+    	//Check $baseTableCol is sent or not
+    	if($relTableCol==null)
+    		$relTableCol=strtolower(static::class."_id");
+		//Require proper model.php
+		require_once '../app/models/' . $model . '.php';
+		//Create object
+		$object=new $model;
+		$object=$object->where($relTableCol,$this->$baseTableCol)->first();
+        return $object;
+    }
+
+    public function belongsTo($model,$baseTableCol=null,$relTableCol="id"){
+    	//Check $baseTableCol is sent or not
+    	if($baseTableCol==null)
+    		$baseTableCol=strtolower($model."_id");
+		//Require proper model.php
+		require_once '../app/models/' . $model . '.php';
+		//Create object
+		$object=new $model;
+		$object=$object->where($relTableCol,$this->$baseTableCol)->first();
+        return $object;
+    }
+    public function hasMany($model,$baseTableCol="id",$relTableCol){
+    	//Check $baseTableCol is sent or not
+    	if($relTableCol==null)
+    		$relTableCol=strtolower(static::class."_id");
+		//Require proper model.php
+		require_once '../app/models/' . $model . '.php';
+		//Create object
+		$object=new $model;
+		$object=$object->where($relTableCol,$this->$baseTableCol)->get();
+        return $object;
+    } 
+
+    public function belongsToMany($model,$pivotTable,$baseCol="id",$basePivotCol=null,$relCol="id",$relPivotCol=null){
+    	// Check basePivotCol and $relPivotCol are sent or not:
+    	if($basePivotCol==null)
+    		$basePivotCol=strtolower(static::class)."_id";
+    	if($relPivotCol==null)
+    		$relPivotCol=$model."_id";
+
+		//Require proper model.php
+		require_once '../app/models/' . $model . '.php';
+
+		//Find ids from pivot Table
+		$results=$this->rawQuery("SELECT ".$relPivotCol." FROM ".$pivotTable." WHERE ".$basePivotCol."=".$this->$baseCol);
+		$objects=array();
+
+		//Find proper rel models:
+		foreach ($results as $key => $result) {	
+			//Create object
+			$object=new $model;
+			$object=$object->where($relCol,$result[$relPivotCol])->first();
+			array_push($objects, $object);
+		}
+        return $objects;
+    }
 }
 
 	

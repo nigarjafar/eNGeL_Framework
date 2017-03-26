@@ -39,17 +39,33 @@ class UserController extends Controller{
 
 	public function get_profile(){
 		$user=$this->model('User');
-		$user->setTable('users');
 
-		$user=$user->get();
+
+		$user=$user->max('id');
 		var_dump($user);
+		// echo "<hr>";
+		// echo $user->id;
+		// echo "<hr>";
+		// var_dump($user->companies());
+		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
+	}
 
+	public function get_company(){
+		$company=$this->model('Company')->where('id','2')->first();
+		echo $company->id."***********";
+
+
+
+
+		$posts=$company->posts();
+		echo "<hr>";
+		var_dump($posts);
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
 	}
 
 	public function get_all(){
 		$user=$this->model('User');
-		$user->setTable('users');
+		var_dump($user->where('id','>',0)->get());
 		
 	}
 
@@ -82,6 +98,23 @@ class UserController extends Controller{
 			$user->setTable('users');
 			$user->where("id",$id)->where('name',"Nigar")->forceDelete();
 
+	}
+
+	public function get_join(){
+			$user=$this->model('User');
+			$user->setTable('users');
+			$user=$user->leftJoin('companies','users.id','=','companies.user_id')
+            	
+            	->get();
+			var_dump($user);
+
+	}
+
+	public function get_model(){
+			$user=$this->model('User');
+			$user->setTable('users');
+			$user= $user->where('id',7);
+		
 	}
 
 	public function get_recover($id){

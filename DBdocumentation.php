@@ -47,6 +47,7 @@ addColumn("user_id","INT UNSIGNED")->foreignKey("users","id")
 addColumn(column_name,type)->foreignKey(reference_table,reference_column)// Be careful about type of foreign key: if reference column and foreign key column type are not the same, it will cause an error. Type of ids that created by id() method is INT UNSIGNED.
 
 
+
 //**** In app folder, add require_once('database/migrations/TableNameTable.php') to migrate.php ****//
 //**** In app folder, open cmd and write php migrate.php ****//
 
@@ -63,7 +64,7 @@ $user->setTable('users');   // Set table which you want to use.
 //***get&***//
 $user->get() //return the results  (all columns)
 $user->get('colname') //return the only selected column (only 1 column) 
-$user->get( ['colname1','colname2'] ) //return the only selected columnS (many columns)
+$user->get( 'colname1','colname2',.. ) //return the only selected columnS (many columns)
 
 //***first***//
 $user->first( ) //return the only first resulr
@@ -131,6 +132,25 @@ $user->sum('id')->get() // SELECT SUM(id)
 //******//
 $user->distinct() // SELECT DISTINCT ...
 
+//**Joins***// 
+//Inner
+join($joinTable,$baseTableCol,$operator,$joinTableCol)
+$user->join('companies','users.id','=','companies.user_id')
+	->get('users.*','companies.id') // SELECT * FROM users JOIN companies ON users.id = companies.user_id 
+//Left
+leftJoin($joinTable,$baseTableCol,$operator,$joinTableCol)
+$user->leftJoin('companies','users.id','=','companies.user_id')
+	->get('users.*','companies.id') // SELECT * FROM users LEFT JOIN companies ON users.id = companies.user_id 
+//Right
+rightJoin($joinTable,$baseTableCol,$operator,$joinTableCol)
+$user->rightJoin('companies','users.id','=','companies.user_id')
+	->get('users.*','companies.id') // SELECT * FROM users RIGHT JOIN companies ON users.id = companies.user_id
+//Cross
+crossJoin($joinTablel)
+$user->crossJoin('companies')
+	->get('users.*','companies.id') // SELECT * FROM users CROSS JOIN companies
+
+
 
 
 
@@ -138,7 +158,7 @@ $user->distinct() // SELECT DISTINCT ...
 
 //__________________________________________________________________________//
 
-//****************************** Soft Delete ************************************//
+//****************************** Soft Delete ********************************//
 //__________________________________________________________________________//
 
 $user->delete() //When soft deleting a model, it is not actually removed from your database. Instead, a deleted_at timestamp is 				set on the record. When querying a model that uses soft deletes, the "deleted" models will not be included in 					query results.
@@ -146,5 +166,132 @@ $user->forceDelete() // delete row from database
 $user->recover() //recover soft deleted row
 $user->withTrash() //return results with "deleted" models.
 
+
+
+
+//__________________________________________________________________________//
+
+//****************************** Model-> Relationships **********************//
+//__________________________________________________________________________//
+
+
+
+//________________________________________________//
+
+//One To One//
+//_______________________________________________//
+belongsTo($model,$baseTableCol,$relTableCol) 
+belongsTo($model)
+
+/*****Post table*******/
+//
+// |id|company_id|title|body|....Here company_id is $baseTableCol
+//
+// ****Company table******
+//
+// |id|name|info|phone|....Here id is $relTableCol
+//
+
+
+class Post extends Model{
+	public $table="posts";
+
+	public function company(){
+		return $this->belongsTo("Company"); 
+		//This is equal to 
+		//return $this->belongsTo("Company","company_id","id"); 
+	}
+	
+}
+
+//________________________________________________________________________//
+
+hasOne($model,$baseTableCol,$relTableCol)
+hasOne($model) 
+
+/*****User table*******/
+//
+// |id|name|type|....Here id is $baseTableCol
+//
+// ****Company table******
+//
+// |id|user_id|info|phone|....Here user_id is $relTableCol
+
+
+class User extends Model{
+	public $table="users";
+
+	public function company(){
+		return $this->hasOne("Company");
+		//This is equal to
+		//return $this->hasMany("Company","id","user_id");
+	}
+}
+//________________________________________________//
+
+//One To Many//
+//_______________________________________________//
+
+
+hasMany($model,$baseTableCol,$relTableCol)
+hasMany($model) 
+
+/*****Post table*******/
+//
+// |id|company_id|title|body|....Here company_id is $relTableCol
+//
+// ****Company table******
+//
+// |id|name|info|phone|....Here id is $baseTableCol
+//
+
+class Company extends Model{
+	public $table="companies";
+		
+	public function posts(){
+		return $this->hasMany("Post");
+		//This is equal to
+		//return $this->hasMany("Post","id","company_id");
+	}
+}
+
+
+//Reverse in One To Many is belongsTo as One to One.
+
+
+//________________________________________________//
+
+//One To Many//
+//_______________________________________________//
+
+belongsToMany($model,$pivotTable,$baseCol,$basePivotCol,$relCol,$relPivotCol)
+belongsToMany($model,$pivotTable)
+
+/*****Post table*******/
+//
+// |id|company_id|title|body|....Here  id is $relCol
+//
+// ****Tag table******
+//
+// |id|name|.. Here  id is $baseCol
+//
+// ******post_tag******// 
+// |post_id|tag_id| // tag_id is $basePivotCol , post_id is $relPivotCol
+
+class Tag extends Model{
+	public $table="tags";
+
+	public function posts(){
+		return $this->belongsToMany("Post","post_tag");
+		//This is equal to
+		//return $this->belongsToMany("Post","post_tag","id","tag_id","id","post_id");
+
+	}
+	
+}
+
+//In order to use less parameters in functions column in db names should be as follow
+// id (every table must have "id")
+// user_id,company_id ... (Not userId or smt else)  (in dependent tables)
 
 

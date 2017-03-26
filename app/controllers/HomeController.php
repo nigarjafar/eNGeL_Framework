@@ -10,15 +10,18 @@ class HomeController extends Controller
 
 	public function get_about()
 	{
-		$fileName = 'uploads/mypic.jpg';
+		  $fileName = 'uploads/mypic.jpg';
 		  $result=$this->loader()
 							  	->library('Img_lib',$fileName);
-									$result->resize(30,30,'exact');
-									$result->saveImage('uploads/mypic-exact.jpg');
+									$result->resize(50,null,'maxwidth');
 
+				//  $result->freecrop(900,500,400,100);
+			  	$result->save('uploads/img3.jpg');
+				echo "<pre>";
+				print_r($result);
+				echo "</pre>";
 
-  // print_r($result);
-		return self::View('test');
+		  return $this->View('test');
 	}
 
 }

@@ -21,6 +21,7 @@ class Table{
 		$this->columns["$column_name"]=$column_type;
 		return $this;
 	}
+	
 
 	//Create id column / Not Null/ Auto Increment/ Primary key
 	function id(){
@@ -101,7 +102,6 @@ class Table{
 
 	//Add foreign key
 	function foreignKey($referenceTable,$referenceCol){
-		var_dump($this->columns);
 		end($this->columns);         // move the internal pointer to the end of the array
 		$lastKey = key($this->columns); //get the last key
 	
@@ -112,7 +112,6 @@ class Table{
 	}
 	//Send query to db.php
 	function save(){
-		var_dump($this->columns);
 		foreach ($this->foreignKeys as $key=>$value) {
 			$this->db->AddForeignKey($value[0],$value[1],$value[2]);
 		}
@@ -120,6 +119,7 @@ class Table{
 
 		return $this;
 	}
+
 
 
 
