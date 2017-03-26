@@ -159,7 +159,7 @@ class DB {
 			case 'in':
 
 				//WHERE `colname` IN (?,?,?,....?)
-				$this->where.=' `'.$row[0].'` NOT IN (';
+				$this->where.=' `'.$row[0].'` IN (';
 
 				foreach ($row[1] as $key => $value) {
 					$this->where.='?';

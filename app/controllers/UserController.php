@@ -57,13 +57,13 @@ class UserController extends Controller{
 	}
 
 	public function get_company(){
-		$company=$this->model('Company')->where('id','2')->first();
-		echo $company->id."***********";
+		$country=$this->model('Country')->where('id','2')->first();
+		echo $country->id."***********";
 
 
 
 
-		$posts=$company->posts();
+		$posts=$country->posts();
 		echo "<hr>";
 		var_dump($posts);
 		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
