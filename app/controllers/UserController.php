@@ -33,14 +33,8 @@ class UserController extends Controller{
         if ($user->username!="Gunel"){
 //            $this->session->setSession('danger', 'girish qadagan');
         }
-//encryption part
-//
-//        $data = "hello little lorem ipsum bla bla blsdl";
-//
-//        $enc = $this->loadLib('Encryption');
-//        $hashed = $enc->generateKey($data, 'first');
-//        var_dump($hashed);
-        return $this->View('home', ['name1'=>$user->username]);
+
+        return $this->View('home', ['name'=>$user->username]);
 	}
 
 	public function get_profile(){
@@ -164,6 +158,7 @@ class UserController extends Controller{
             $org = $_POST['first'];
             $user=$this->model('User');
 			$user->setTable('nese');
+            $this->enc->createToken('sjsj');
 
 //            print_r('<pre>');
 //            print_r($user->rawQuery("SELECT `id` FROM `nese` WHERE `id` = :name"));
@@ -181,7 +176,7 @@ class UserController extends Controller{
                 $ne = $this->valid->get_readable_errors(true);
                 $this->View('home', ['name1'=>$user->username, 'error'=>$ne]);
             } else {
-//                print_r($validated_data); // validation successful
+                print_r($validated_data); // validation successful
 
 //                $this->enc->settingParams('blaaa','wsshh',256);
 //                $hashed = $this->enc->encrypt();
