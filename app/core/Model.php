@@ -41,7 +41,7 @@ class Model{
 	//Create new row
 	public function create($data){
 		$this->db->insert($this->table, $data)->Query();
-		return $this;
+		return true;
 	}
 
 	//Update row
@@ -65,18 +65,21 @@ class Model{
 	//if softDelete is true, update deleted_at by current time
 	//else delete row
 	public function delete(){
+		
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+
 		if(isset($this->softDelete) && $this->softDelete)
-			$this->update(["deleted_at"=> date('Y-m-d H:i:s')]);
+			return $this->db->SoftDelete($this->table)->Query()->RowCount();
 		else
-			$this->db->	Delete($this->table)->Query();
+			return $this->db->Delete($this->table)->Query()->RowCount();
 
-
-		return $this;
 	}
 	//Delete row without checking softdelete
 	public function forceDelete(){
-		$this->db->	Delete($this->table)->Query();
-		return $this;
+		return $this->db->	Delete($this->table)->Query()->RowCount();
 	}
 
 	//Recover soft deleted rows

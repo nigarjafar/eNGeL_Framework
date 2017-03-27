@@ -53,14 +53,15 @@ class UserController extends Controller{
 	public function get_company(){
 		$country=$this->model('Country')->where('id','2')->first();
 		echo $country->id."***********";
-
-
-
-
 		$posts=$country->posts();
 		echo "<hr>";
 		var_dump($posts);
-		//var_dump($user->where('name','Engel')->whereBetween('id',1,10)->get(['id','name']));
+	}
+	public function get_raw(){
+		echo "Hello";
+		$users =DBraw::select("SELECT * FROM users where id=:id",['id'=>2]);
+		var_dump($users);
+
 	}
 
 	public function get_all(){
@@ -70,23 +71,19 @@ class UserController extends Controller{
 	}
 
 	public function get_create(){
-		$user=$this->model('User');
-		$user->setTable('users');
-		$user->create([
-			'name'=>'Engel',
-			'email'=>'workssccchujjksd'.rand(0,29299292),
-			'user_type'=>'company',
-			'password'=>'ahuhsujd'.rand(0,29299292)
+		$user=$this->model('Comment');
+		var_dump($user->create([
+			'surname'=>'Engel',
 
-			]);
+
+			])
+			);
 	}
 
 	public function get_update($id){
-		$user=$this->model('User');
-		$user->setTable('users');
+		$user=$this->model('Comment');
 		$user=$user->withTrash()->where("id",$id)->update([
-			'name'=>'EngelFM',
-			'user_type'=>'user',
+			'surname'=>'EngelklFM',
 		]);
 
 		var_dump($user);
@@ -94,9 +91,8 @@ class UserController extends Controller{
 	}
 
 	public function get_delete($id){
-			$user=$this->model('User');
-			$user->setTable('users');
-			$user->where("id",$id)->where('name',"Nigar")->forceDelete();
+			$user=$this->model('Comment');
+			var_dump($user->where("id",$id)->forceDelete());
 
 	}
 

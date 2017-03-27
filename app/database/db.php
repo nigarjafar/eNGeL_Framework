@@ -24,8 +24,10 @@ class DB {
 
 
 	//raw function
-	public function raw($query){
+	public function raw($query,$params=null){
         $this->queryStatement=$query;
+        if($params)
+        	$this->params=$params;
         return $this;
     }
 
@@ -63,10 +65,15 @@ class DB {
 				$values=$values.',';
 			}
 		}
+		//Check if created_at column exist or not
 
-	$this->queryStatement="INSERT INTO `".$table."` (".$into.") VALUES (".$values.")";
+		$existCreated_at = $this->con->query("SHOW COLUMNS FROM ".$table." LIKE 'created_at'")->rowCount();
+		if($existCreated_at)
+		  	$this->queryStatement="INSERT INTO `".$table."` (".$into." ,created_at) VALUES (".$values." ,NOW())";
+		else
+			$this->queryStatement="INSERT INTO `".$table."` (".$into." ) VALUES (".$values.")";
 
-	return $this;
+		return $this;
 
 	}
 
@@ -108,6 +115,13 @@ class DB {
 	//DELETE FROM $table_name WHERE id=:id ...
 	public function Delete($table){
 		$this->queryStatement= 'DELETE FROM `'.$table.'` WHERE '.$this->where;
+		return $this;
+	}
+
+
+	// Soft Delete
+	public function SoftDelete($table){
+		$this->queryStatement= 'UPDATE '.$table.' SET `deleted_at`=NOW() WHERE '.$this->where;
 		return $this;
 	}
 
@@ -265,15 +279,17 @@ class DB {
         $this->query->execute($this->params);
 
         //Deleting query statement and data
-		$this->queryStatement=null;
-		$this->where=null;
-		$this->columns=null;
-		$this->params=null;
-		$this->order=null;
-		$this->limit=null;
-		$this->offset=null;
-		$this->distinct=null;
-		$this->join=array();
+		$where=null;
+		$columns=null;
+		$queryStatement=null;
+		$query=null;
+		$params=array();
+		$order=null;
+		$limit=null;
+		$offset=null;
+		$distinct=null;
+		$foreignKeys=null;
+		$join=array();
 		return $this;
 
 
