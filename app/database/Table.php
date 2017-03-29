@@ -88,15 +88,16 @@ class Table{
 
 	//Add creating_time and last_updating_time columns
 	function timeLog(){
-		$this->columns["created_at"]="TIMESTAMP";
-		$this->columns["updated_at"]="TIMESTAMP";
+		$this->columns["created_at"]=" TIMESTAMP default '0000-00-00 00:00:00'";
+		$this->columns["updated_at"]=" TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE NOW()";
+		
 		return $this;
 	}
 
 
 	//Add deleted_at column. 
 	function softDelete(){
-		$this->columns["deleted_at"]="TIMESTAMP";
+		$this->columns["deleted_at"]="TIMESTAMP NULL";
 		return $this;
 	}
 

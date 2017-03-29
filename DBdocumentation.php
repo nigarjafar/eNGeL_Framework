@@ -178,20 +178,22 @@ $user->withTrash() //return results with "deleted" models.
 
 //________________________________________________//
 
-//One To One//
+//belongsTo//
 //_______________________________________________//
-belongsTo($model,$baseTableCol,$relTableCol) 
+belongsTo($model,$baseTableCol,$relatedTableIDCol) 
 belongsTo($model)
 
-/*****Post table*******/
-//
-// |id|company_id|title|body|....Here company_id is $baseTableCol
-//
-// ****Company table******
-//
-// |id|name|info|phone|....Here id is $relTableCol
-//
 
+// companies 	"Company" ->$model
+//     id    -> $relatedTableIDCol
+//     name 
+
+
+// posts  -> "Post" ->$model
+//     id   $relIDcol
+//     company_id   $baseTableCol
+//     title 
+//
 
 class Post extends Model{
 	public $table="posts";
@@ -204,20 +206,25 @@ class Post extends Model{
 	
 }
 
-//________________________________________________________________________//
+//________________________________________________//
 
-hasOne($model,$baseTableCol,$relTableCol)
+//hasOne//
+//_______________________________________________//
+
+hasOne($model,$baseTableIDCol,$relatedTableCol)
 hasOne($model) 
 
-/*****User table*******/
+// companies 	"Company" ->$model
+//     id    	
+//	   user_id  $relatedTableCol
+//     name 
 //
-// |id|name|type|....Here id is $baseTableCol
-//
-// ****Company table******
-//
-// |id|user_id|info|phone|....Here user_id is $relTableCol
 
 
+// users  -> 
+//     id   $baseTableIDCol
+//     name 
+//
 class User extends Model{
 	public $table="users";
 
@@ -229,20 +236,23 @@ class User extends Model{
 }
 //________________________________________________//
 
-//One To Many//
+//hasMany//
 //_______________________________________________//
 
 
-hasMany($model,$baseTableCol,$relTableCol)
+
+hasMany($model,$baseTableIDCol,$relatedTableCol)
 hasMany($model) 
 
-/*****Post table*******/
-//
-// |id|company_id|title|body|....Here company_id is $relTableCol
-//
-// ****Company table******
-//
-// |id|name|info|phone|....Here id is $baseTableCol
+// companies 	
+//     id    -> $baseTableIDCol
+//     name 
+
+
+// posts  -> "Post" ->$model
+//     id   $relIDcol
+//     company_id   $relatedTableCol
+//     title 
 //
 
 class Company extends Model{
@@ -261,22 +271,23 @@ class Company extends Model{
 
 //________________________________________________//
 
-//One To Many//
+//belongsToMany//
 //_______________________________________________//
 
-belongsToMany($model,$pivotTable,$baseCol,$basePivotCol,$relCol,$relPivotCol)
+belongsToMany($model,$pivotTable,$baseTableIDCol,$basePivotCol,$relatedTableIDCol,$relatedPivotCol)
 belongsToMany($model,$pivotTable)
 
-/*****Post table*******/
-//
-// |id|company_id|title|body|....Here  id is $relCol
-//
-// ****Tag table******
-//
-// |id|name|.. Here  id is $baseCol
-//
-// ******post_tag******// 
-// |post_id|tag_id| // tag_id is $basePivotCol , post_id is $relPivotCol
+// tags 	
+//     id    -> $baseTableIDCol
+//     name 
+
+// posts  -> Post ->$model
+//     id   $relatedTableIDCol
+//     title 
+
+// post_tag -> $pivotTable
+	//post_id  $relatedPivotCol
+	//tag_id	$basePivotCol
 
 class Tag extends Model{
 	public $table="tags";
@@ -286,6 +297,41 @@ class Tag extends Model{
 		//This is equal to
 		//return $this->belongsToMany("Post","post_tag","id","tag_id","id","post_id");
 
+	}
+	
+}
+
+
+//________________________________________________//
+
+//Has Many Through//
+//_______________________________________________//
+hasManyThrough($throughModel,	$resultModel,$baseTableIDcol,$throughTableCol,$throughTableIDcol,$resultTableCol)
+hasManyThrough($throughModel,	$resultModel)
+
+
+// countries  
+//     id   ->$baseTableIDcol
+//     name
+
+// users 	// User.php ->$throughModel
+//     id    -> $throughTableIDcol
+//     country_id   ->$throughTableCol
+//     name 
+
+// posts  // Post.php ->$resultModel
+//     id 
+//     user_id   ->$resultTableCol
+//     title 
+
+
+
+class Country extends Model{
+	public $table="countries";
+
+	public function posts(){
+		return $this->hasManyThrough("Company","Post");
+		// Or return $this->hasManyThrough("Company","Post","id","country_id","id","company_id");
 	}
 	
 }

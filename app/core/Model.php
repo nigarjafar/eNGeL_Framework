@@ -13,8 +13,26 @@ class Model{
 
 	//function for raw query
 	public function rawQuery($query){
-        return $this->db->raw($query)->Query()->Get();
+        $dbResults=$this->db->raw($query)->Query()->Get();
+
+        $objects=array();
+
+        //Creating models foreach db result
+		foreach($dbResults as $dbKey => $result){
+			//Create new model
+			$model=new $this();
+			//Set dynamic parameters
+			foreach ($result as $key => $value) {
+				$model->$key=$value;
+			}
+			array_push($objects,$model);
+		}
+
+		return $objects;
+
     }
+
+
     //set table name
 	public function setTable($table){
 		$this->table=$table;
@@ -23,7 +41,7 @@ class Model{
 	//Create new row
 	public function create($data){
 		$this->db->insert($this->table, $data)->Query();
-		return $this;
+		return true;
 	}
 
 	//Update row
@@ -47,18 +65,21 @@ class Model{
 	//if softDelete is true, update deleted_at by current time
 	//else delete row
 	public function delete(){
+		
+		if(isset($this->softDelete) && $this->softDelete && !$this->withTrash){
+			$this->whereNull($this->table.'.deleted_at');
+			$this->withTrash=false;
+		}
+
 		if(isset($this->softDelete) && $this->softDelete)
-			$this->update(["deleted_at"=> date('Y-m-d H:i:s')]);
+			return $this->db->SoftDelete($this->table)->Query()->RowCount();
 		else
-			$this->db->	Delete($this->table)->Query();
+			return $this->db->Delete($this->table)->Query()->RowCount();
 
-
-		return $this;
 	}
 	//Delete row without checking softdelete
 	public function forceDelete(){
-		$this->db->	Delete($this->table)->Query();
-		return $this;
+		return $this->db->	Delete($this->table)->Query()->RowCount();
 	}
 
 	//Recover soft deleted rows
@@ -339,19 +360,19 @@ class Model{
 		return $this;	
 	}
 
-	public function hasOne($model,$baseTableCol="id",$relTableCol=null){
+	public function hasOne($model,$baseTableIDCol="id",$relatedTableCol=null){
     	//Check $baseTableCol is sent or not
-    	if($relTableCol==null)
-    		$relTableCol=strtolower(static::class."_id");
+    	if($relatedTableCol==null)
+    		$relatedTableCol=strtolower(static::class."_id");
 		//Require proper model.php
 		require_once '../app/models/' . $model . '.php';
 		//Create object
 		$object=new $model;
-		$object=$object->where($relTableCol,$this->$baseTableCol)->first();
+		$object=$object->where($relatedTableCol,$this->$baseTableIDCol)->first();
         return $object;
     }
 
-    public function belongsTo($model,$baseTableCol=null,$relTableCol="id"){
+    public function belongsTo($model,$baseTableCol=null,$relatedTableIDCol="id"){
     	//Check $baseTableCol is sent or not
     	if($baseTableCol==null)
     		$baseTableCol=strtolower($model."_id");
@@ -359,43 +380,71 @@ class Model{
 		require_once '../app/models/' . $model . '.php';
 		//Create object
 		$object=new $model;
-		$object=$object->where($relTableCol,$this->$baseTableCol)->first();
+		$object=$object->where($relatedTableIDCol,$this->$baseTableCol)->first();
         return $object;
     }
-    public function hasMany($model,$baseTableCol="id",$relTableCol){
+    public function hasMany($model,$baseTableIDCol="id",$relatedTableCol=null){
     	//Check $baseTableCol is sent or not
-    	if($relTableCol==null)
-    		$relTableCol=strtolower(static::class."_id");
+    	if($relatedTableCol==null)
+    		$relatedTableCol=strtolower(static::class."_id");
 		//Require proper model.php
 		require_once '../app/models/' . $model . '.php';
 		//Create object
 		$object=new $model;
-		$object=$object->where($relTableCol,$this->$baseTableCol)->get();
+		$object=$object->where($relatedTableCol,$this->$baseTableIDCol)->get();
         return $object;
     } 
 
-    public function belongsToMany($model,$pivotTable,$baseCol="id",$basePivotCol=null,$relCol="id",$relPivotCol=null){
+    public function belongsToMany($model,$pivotTable,$baseTableIDCol="id",$basePivotCol=null,$relatedTableIDCol="id",$relatedPivotCol=null){
     	// Check basePivotCol and $relPivotCol are sent or not:
     	if($basePivotCol==null)
     		$basePivotCol=strtolower(static::class)."_id";
-    	if($relPivotCol==null)
-    		$relPivotCol=$model."_id";
+    	if($relatedPivotCol==null)
+    		$relatedPivotCol=strtolower($model."_id");
 
 		//Require proper model.php
 		require_once '../app/models/' . $model . '.php';
+		$object=new $model;
+		return $object->rawQuery("SELECT * FROM ".$object->table." WHERE ".$relatedTableIDCol." in (SELECT ".$relatedPivotCol." FROM ".$pivotTable." WHERE ".$basePivotCol."=".$this->$baseTableIDCol.")");
+    } 
 
-		//Find ids from pivot Table
-		$results=$this->rawQuery("SELECT ".$relPivotCol." FROM ".$pivotTable." WHERE ".$basePivotCol."=".$this->$baseCol);
-		$objects=array();
+    public function hasManyThrough($throughModel,
+    								$resultModel,
+    								$baseTableIDCol="id",
+    								$throughTableCol=null,
+    								$throughTableIDCol="id",
+    								$resultTableCol=null)
+    {
+    	// Check basePivotCol and $relPivotCol are sent or not:
+    	if($throughTableCol==null)
+    		$throughTableCol=strtolower(static::class)."_id";
+    	if($resultTableCol==null)
+    		$resultTableCol=strtolower($throughModel."_id");
+    	
 
-		//Find proper rel models:
-		foreach ($results as $key => $result) {	
-			//Create object
-			$object=new $model;
-			$object=$object->where($relCol,$result[$relPivotCol])->first();
-			array_push($objects, $object);
-		}
-        return $objects;
+		//Require proper model.php
+		require_once '../app/models/' . $throughModel . '.php';
+		require_once '../app/models/' . $resultModel . '.php';
+
+		$obj=new $resultModel;
+		$throughObj=new $throughModel;
+
+		//Query
+		return  $obj->rawQuery("Select * from ".$obj->table." where ".$resultTableCol." IN (Select ".$throughTableIDCol." from ".$throughObj->table." where ".$throughTableCol."=".$this->$baseTableIDCol.")");
+		// $resultObjects=array();
+
+		// // Creating models for each query result
+		// foreach($dbResults as $dbKey => $result){
+		// 	//Create new model
+		// 	$model=new $resultModel;
+		// 	//Set dynamic parameters
+		// 	foreach ($result as $key => $value) {
+		// 		$model->$key=$value;
+		// 	}
+		// 	array_push($resultObjects,$model);
+		// }
+
+		// return $resultObjects;
     }
 }
 
