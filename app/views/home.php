@@ -10,11 +10,6 @@
 <h3>
     <?php
 
-//     echo $this->session->get_flashdata('danger') . '<br>';
-// //    var_dump($this->session->hasSession('danger'));
-//     if (isset($_POST['submit'])){
-//         echo $_POST['first'];
-//     }
 
     ?>
 </h3>

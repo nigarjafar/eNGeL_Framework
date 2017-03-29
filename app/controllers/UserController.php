@@ -5,6 +5,7 @@ class UserController extends Controller{
  	private $session;
     private $valid;
     private $enc;
+    private $parse;
 
     function __construct()
     {
@@ -13,7 +14,7 @@ class UserController extends Controller{
         $this->session=$loader->library('Session');
         $this->valid=$loader->library('Validation');
         $this->enc=$loader->library('Encryption');
-
+        $this->parse=$loader->library('Parser');
     }
 
 
@@ -33,7 +34,8 @@ class UserController extends Controller{
         if ($user->username!="Gunel"){
 //            $this->session->setSession('danger', 'girish qadagan');
         }
-
+        $parsed = $this->parse->setOutPut('https://www.google.az/');
+        var_dump($parsed);
         return $this->View('home', ['name'=>$user->username]);
 	}
 
