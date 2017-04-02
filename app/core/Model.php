@@ -126,27 +126,22 @@ class Model{
 		// where ([ [key,operator,value],[key,operator,value],.... ])
 		if(func_num_args()==1){
 			foreach (func_get_args()[0] as $datum) {
-				$this->db->SetWhereStatement($datum,'AND');
+				$this->$this->db->SetWhereStatement($datum,'AND');
 			}
 		}
-
 		// where( key,value) // default is =
 		else if(func_num_args()==2){
 			$datum[0]=func_get_args()[0];
 			$datum[1]="=";
-			$datum[2]=(func_get_args()[1])?func_get_args()[1]:"is null";
+			$datum[2]=func_get_args()[1];
 			$this->db->SetWhereStatement($datum,'AND');
-
 		}
-
 		//where(key,operator,value) 
 		else if(func_num_args()==3){
 			$datum[0]=func_get_args()[0];
 			$datum[1]=func_get_args()[1];
-			$datum[2]=(func_get_args()[1])?func_get_args()[1]:"is null";
-
+			$datum[2]=func_get_args()[2];
 			$this->db->SetWhereStatement($datum,'AND');
-
 		}
 		return $this;
 	}
@@ -156,29 +151,26 @@ class Model{
 		// orWhere ([ [key,operator,value],[key,operator,value],.... ])
 		if(func_num_args()==1){
 			foreach (func_get_args()[0] as $datum) {
-				$this->db->SetWhereStatement($datum,'OR');
+				$this->$this->db->SetWhereStatement($datum,'OR');
 			}
 		}
-
 		// orWhere( key,value) // default is =
 		else if(func_num_args()==2){
 			$datum[0]=func_get_args()[0];
 			$datum[1]="=";
 			$datum[2]=func_get_args()[1];
 			$this->db->SetWhereStatement($datum,'OR');
-
 		}
-
-		//orhere(key,operator,value) 
+		//orwhere(key,operator,value) 
 		else if(func_num_args()==3){
 			$datum[0]=func_get_args()[0];
 			$datum[1]=func_get_args()[1];
 			$datum[2]=func_get_args()[2];
-
+			$this->db->SetWhereStatement($datum,'OR');
 		}
-
 		return $this;
 	}
+
 
 	public function withTrash(){
 		$this->withTrash=true;
@@ -431,20 +423,7 @@ class Model{
 
 		//Query
 		return  $obj->rawQuery("Select * from ".$obj->table." where ".$resultTableCol." IN (Select ".$throughTableIDCol." from ".$throughObj->table." where ".$throughTableCol."=".$this->$baseTableIDCol.")");
-		// $resultObjects=array();
-
-		// // Creating models for each query result
-		// foreach($dbResults as $dbKey => $result){
-		// 	//Create new model
-		// 	$model=new $resultModel;
-		// 	//Set dynamic parameters
-		// 	foreach ($result as $key => $value) {
-		// 		$model->$key=$value;
-		// 	}
-		// 	array_push($resultObjects,$model);
-		// }
-
-		// return $resultObjects;
+	
     }
 }
 

@@ -271,7 +271,7 @@ class DB {
 //burada prepare execute elave etdikde sql injection-larin qabagin alir;
 	public function Query(){
 	  	var_dump($this->queryStatement);
-	  	echo "<hr>";
+	  	echo "<hr>Params:";
 	  	var_dump($this->params);
 	  	echo "<hr>";
 

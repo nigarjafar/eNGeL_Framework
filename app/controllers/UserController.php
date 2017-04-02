@@ -109,9 +109,10 @@ class UserController extends Controller{
 	}
 
 	public function get_model(){
+			echo "<hr><hr><hr><hr><hr>";
 			$user=$this->model('User');
-			$user->setTable('users');
-			$user= $user->where('id',7);
+			$user= $user->where('id','>',7)->first();
+			var_dump($user);
 		
 	}
 
@@ -122,10 +123,10 @@ class UserController extends Controller{
 
 	}
 
-	public function get_where($id){
+	public function get_where($id,$name){
+			echo "<hr>---".$name."------".$id."----<hr>";
 			$user=$this->model('User');
-			$user->setTable('users');
-			var_dump($user->where(	"id",">",$id)->where('name','=','Nigar')->get());
+			var_dump($user->where("id",'>',$id)->orWhere('name',$name)->get());
 
 	}
 	public function get_orwhere($id){
@@ -201,6 +202,15 @@ class UserController extends Controller{
 
 	public function delete_test(){
 		echo "It works (Delete)";
+	}
+
+	public function patch_test(){
+        echo "It works (patch)";
+
+    }
+
+	public function options_test(){
+		echo "It works (options)";
 	}
 
 	public function post_file()
