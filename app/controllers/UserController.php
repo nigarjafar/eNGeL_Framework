@@ -39,6 +39,13 @@ class UserController extends Controller{
         return $this->View('home', ['name'=>$user->username]);
 	}
 
+	public function paginate(){
+		$posts=$this->model('Post');
+		$posts=$posts->where('id','>',6)->paginate(6);
+		//var_dump($posts);
+		return $this->View('pagination', ['posts'=>$posts]);
+	}
+
 	public function get_profile(){
 		$user=$this->model('User');
 

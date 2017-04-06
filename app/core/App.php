@@ -25,6 +25,7 @@ class App{
 			//Call proper function
 		 	call_user_func_array([$controller,$method],$parameters);
 		}
+		
 		else
 			echo "<h1>Error 404 - Page not found</h1>";
 	}

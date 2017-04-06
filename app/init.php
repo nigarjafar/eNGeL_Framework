@@ -7,6 +7,7 @@ require_once 'routes.php' ;
 require_once 'core/App.php' ;
 require_once 'database/db.php';
 require_once 'config/config.php';
+require_once 'core/Pagination.php';
 
 $object=new App;
 

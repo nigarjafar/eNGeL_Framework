@@ -11,6 +11,7 @@ class Model{
 		$this->db=new DB($con);
 	}
 
+
 	//function for raw query
 	public function rawQuery($query){
         $dbResults=$this->db->raw($query)->Query()->Get();
@@ -292,7 +293,7 @@ class Model{
 			$this->whereNull($this->table.'.deleted_at');
 			$this->withTrash=false;
 		}
-		return $this->db->Select($this->table,"COUNT(*)")->Query()->Get();
+		return $this->db->Select($this->table,"COUNT(*)")->Query()->Get()[0]["COUNT(*)"];
 	}
 
 	public function max($col){
@@ -424,6 +425,33 @@ class Model{
 		//Query
 		return  $obj->rawQuery("Select * from ".$obj->table." where ".$resultTableCol." IN (Select ".$throughTableIDCol." from ".$throughObj->table." where ".$throughTableCol."=".$this->$baseTableIDCol.")");
 	
+    }
+
+    // function paginate($itemsPerPage){
+    // 	//Get all models
+    // 	$items=$this->get();
+    // 	$pagination=array();
+    // 	//splice in given size and put $pagination array
+    // 	while(count($items)){
+    // 		$itemsToCopy=array_splice($items, 0, $itemsPerPage);
+    //    		array_push($pagination,$itemsToCopy);
+    // 	}
+
+    // 	return $pagination;
+    // }
+
+    function paginate($itemsPerPage){
+    	$itemCount=$this->count();
+    	$pagination= new Pagination($itemsPerPage,$itemCount);
+
+    	$items=$this->offset($pagination->offset())->limit($pagination->itemsPerPage)->get();
+    	
+       	$pagination->setItems($items);
+
+
+    	return $pagination;
+
+    	
     }
 }
 
