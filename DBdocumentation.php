@@ -341,3 +341,44 @@ class Country extends Model{
 // user_id,company_id ... (Not userId or smt else)  (in dependent tables)
 
 
+//__________________________________________________________________________//
+
+//****************************** Seeders ********************************//
+//__________________________________________________________________________//
+
+<?php
+
+class PostTableSeeder extends Seeder{
+	public static $table="posts";
+
+
+
+	public static function run(){
+		self::delete() //Delete all rows from table before adding data
+
+		self::create([
+
+	        [
+	          'title' => 'heading 1',
+	          'company_id'=>'2',
+	          'body' => 'chingiz@gmasdddaidfl.cofdfm',
+	        ],
+	        [
+	          'title' => 'heading 2',
+	          'company_id'=>'3',
+	          'body' => 'chingiz@gmasdddaidfl.cofdfm',
+	        ]
+        
+		]);
+
+		return null;
+
+	}
+
+
+}
+
+PostTableSeeder::run();
+
+//**** In app folder, add require_once('database/seeds/NameTableSeeder.php') to seeders.php ****//
+//**** In app folder, open cmd and write php seeders.php ****//

@@ -5,6 +5,7 @@ Route::get("user/model","UserController@get_model");
 Route::get("user/company/<id>","UserController@get_profile");
 Route::get("user/company","UserController@get_company");
 Route::get("paginate","UserController@paginate");
+Route::get("create","UserController@get_create");
 
 Route::get("user/test","UserController@get_test");
 Route::put("user/test","UserController@put_test");

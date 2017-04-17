@@ -65,7 +65,7 @@ class DB {
 				$values=$values.',';
 			}
 		}
-		//Check if created_at column exist or not
+		// Check if created_at column exist or not
 
 		$existCreated_at = $this->con->query("SHOW COLUMNS FROM ".$table." LIKE 'created_at'")->rowCount();
 		if($existCreated_at)
@@ -114,7 +114,7 @@ class DB {
 
 	//DELETE FROM $table_name WHERE id=:id ...
 	public function Delete($table){
-		$this->queryStatement= 'DELETE FROM `'.$table.'` WHERE '.$this->where;
+		$this->queryStatement= 'DELETE FROM `'.$table.((is_null($this->where)) ? null : ' WHERE '.$this->where." ");
 		return $this;
 	}
 
